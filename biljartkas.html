@@ -836,11 +836,12 @@ function checkEnToestemming() {
         alert('Je bent niet ingelogd!');
         return false;
     }
-    
-    // Altijd toestemming verlenen voor de admin of functie '1'
-    if (currentUser.korteInlog === 'admin' || currentUser.functie === '1') {
+   // Alleen toestemming verlenen als de gebruiker Admin-rechten heeft
+    const isAdmin = (currentUser.korteInlog === 'admin') || (currentUser.envAccess && currentUser.envAccess.includes('Admin'));
+    if (isAdmin) {
         return true;
-    }
+    } 
+   
     
     alert('Je hebt geen toestemming om deze actie uit te voeren.');
     return false;
@@ -1046,21 +1047,28 @@ slaDataOp('schollevaar_drank', drankList);
     }
 }
 
-
-
 function deleteKeuken(index) {
+    // 1. Controleer of de ingelogde gebruiker admin-rechten heeft
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const isAdmin = currentUser.envAccess && currentUser.envAccess.includes('Admin');
+
+    if (!isAdmin) {
+        alert('Geen toegang: alleen een admin mag items verwijderen!');
+        return;
+    }
+
+    // 2. Jouw bestaande logica
     if (!checkEnToestemming()) return;
 
     if (confirm('Verwijder dit keukenproduct?')) {
         keukenList.splice(index, 1);
-
-slaDataOp('schollevaar_keuken', keukenList);
-
+        slaDataOp('schollevaar_keuken', keukenList);
         renderKeuken();
         updateKassaSaldo();
         renderReports();
     }
 }
+
 
 
 
