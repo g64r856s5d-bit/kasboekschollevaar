@@ -1344,22 +1344,40 @@ if (confirm('Verwijder deze wallet mutatie?')) {
         envAccess: envAccess
     };
 
-    try {
+   try {
         // 1. Altijd eerst de allerlaatste lijst ophalen uit de cloud database
         const res = await fetch('/api/data/schollevaar_users');
         const data = await res.json();
         if (data.value) {
             let parsed = data.value;
             if (typeof parsed === 'string') {
-                try { parsed = JSON.parse(parsed); } catch(e){}
+                try { parsed = JSON.parse(parsed); } catch(e) {}
             }
             if (Array.isArray(parsed)) {
                 users = parsed;
             }
         }
+
+        // 2. Voeg de gebruiker toe of bewerk bestaande met de al gedefinieerde userData
+        if (editIndex !== "") {
+            users[editIndex] = userData;
+        } else {
+            users.push(userData);
+        }
+
+        // 3. Sla op in lokaal geheugen én direct naar de cloud
+        localStorage.setItem('schollevaar_users', JSON.stringify(users));
+        slaDataOp('schollevaar_users', users);
+
+        cancelEditUser();
+        renderUsers();
+        populateUserSelects();
+        alert('Gebruiker succesvol opgeslagen in de cloud!');
+
     } catch (e) {
-        console.log('Kon cloud data niet ophalen:', e);
+        console.log('Kon cloud data niet opslaan:', e);
     }
+}
 
     
 // 1. Verzamel de gegevens uit het formulier in userData
