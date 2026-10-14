@@ -1321,7 +1321,7 @@ if (confirm('Verwijder deze wallet mutatie?')) {
     }
 
     // ADMIN USERS
-    async function saveUser(event) {
+   async function saveUser(event) {
     event.preventDefault();
     const editIndex = document.getElementById('editIndex').value;
     const envAccessCheckboxes = document.querySelectorAll('input[name="envAccess"]:checked');
@@ -1336,16 +1336,38 @@ if (confirm('Verwijder deze wallet mutatie?')) {
         envAccess: envAccess
     };
 
-    // 1. Haal eerst de meest actuele gebruikers op van de server
     try {
+        // 1. Altijd eerst de allerlaatste lijst ophalen uit de cloud database
         const res = await fetch('/api/data/schollevaar_users');
         const data = await res.json();
-        if (data.value && Array.isArray(data.value)) {
-            users = data.value;
+        if (data.value) {
+            let parsed = data.value;
+            if (typeof parsed === 'string') {
+                try { parsed = JSON.parse(parsed); } catch(e){}
+            }
+            if (Array.isArray(parsed)) {
+                users = parsed;
+            }
         }
     } catch (e) {
-        console.log('Kon actuele gebruikers niet ophalen van server, gebruik lokale stand.');
+        console.log('Kon cloud data niet ophalen:', e);
     }
+
+    // 2. Toevoegen of bewerken in de verse lijst
+    if (editIndex !== "") {
+        users[editIndex] = userData;
+    } else {
+        users.push(userData);
+    }
+
+    // 3. Direct opslaan naar de cloud via slaDataOp
+    await slaDataOp('schollevaar_users', users);
+
+    cancelEditUser();
+    renderUsers();
+    populateUserSelects();
+    alert('Gebruiker succesvol opgeslagen in de cloud!');
+}
 
     // 2. Voeg de gebruiker toe of bewerk bestaande
     if (editIndex !== "") {
