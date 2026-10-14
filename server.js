@@ -16,27 +16,27 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'biljartkas.html'));
 });
 
-// Verbind met SQLite database
-const db = new sqlite3.Database('./kasboek.db', (err) => {
-    if (err) {
-        console.error('Fout bij openen database:', err.message);
-    } else {
-        console.log('Verbonden met de SQLite database.');
-    }
+// Verbind met Turso Cloud Database
+const db = createClient({
+  url: process.env.TURSO_DATABASE_URL,
+  authToken: process.env.TURSO_AUTH_TOKEN,
 });
 
-// Maak een tabel aan voor centrale opslag
-db.run(`CREATE TABLE IF NOT EXISTS app_data (
-    key TEXT PRIMARY KEY,
-    value TEXT
-)`, (err) => {
-    if (err) {
-        console.error('Fout bij aanmaken tabel:', err.message);
-    } else {
-        console.log('Database tabel gecontroleerd/aangemaakt.');
+// Maak een tabel aan voor centrale opslag als deze nog niet bestaat
+async function initDb() {
+    try {
+        await db.execute(`
+            CREATE TABLE IF NOT EXISTS app_data (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            )
+        `);
+        console.log("Database tabel gecontroleerd/aangemaakt in Turso.");
+    } catch (err) {
+        console.error("Fout bij aanmaken tabel in Turso:", err.message);
     }
-});
-
+}
+initDb();
 // API Endpoint om data op te halen
 app.get('/api/data/:key', (req, res) => {
     const key = req.params.key;
