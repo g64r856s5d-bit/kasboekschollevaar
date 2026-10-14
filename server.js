@@ -5,7 +5,44 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware om JSON data te kunnen ontvangen
+// Middleware om JSON-data te kunnen ontvangen
+app.use(express.json());
+
+// Server statische bestanden (zoals HTML, CSS en client JS) vanuit de hoofdmap
+app.use(express.static(__dirname));
+
+// Stuur kas.html mee als iemand de hoofd-URL bezoekt
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'kas.html'));
+});
+
+// Verbind met SQLite database
+const db = new sqlite3.Database('./kasboek.db', (err) => {
+    if (err) {
+        console.error('Fout bij open database:', err.message);
+    } else {
+        console.log('Verbonden met de SQLite-database.');
+    }
+});
+// Middleware om JSON-data te kunnen ontvangen
+app.use(express.json());
+
+// Server statische bestanden (zoals HTML, CSS en client JS) vanuit de hoofdmap
+app.use(express.static(__dirname));
+
+// Stuur kas.html mee als iemand de hoofd-URL bezoekt
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'kas.html'));
+});
+
+// Verbind met SQLite database
+const db = new sqlite3.Database('./kasboek.db', (err) => {
+    if (err) {
+        console.error('Fout bij open database:', err.message);
+    } else {
+        console.log('Verbonden met de SQLite-database.');
+    }
+});// Middleware om JSON data te kunnen ontvangen
 app.use(express.json());
 
 // Serveer statische bestanden (zoals je HTML, CSS en client JS) vanuit dezelfde map
