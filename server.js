@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname)));
 
 // Stuur kas.html mee als iemand de hoofd-URL bezoekt
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'kas.html'));
+    res.sendFile(path.join(__dirname, 'biljartkas.html'));
 });
 
 // Verbind met SQLite database
