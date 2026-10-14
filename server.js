@@ -25,6 +25,42 @@ const db = new sqlite3.Database('./kasboek.db', (err) => {
     }
 });
 
+// Maak een tabel aan voor centrale opslag
+db.run(`CREATE TABLE IF NOT EXISTS app_data (
+    key TEXT PRIMARY KEY,
+    value TEXT
+)`, (err) => {
+    if (err) {
+        console.error('Fout bij aanmaken tabel:', err.message);
+    } else {
+        console.log('Database tabel gecontroleerd/aangemaakt.');
+    }
+});
+
+// Start de server
+app.listen(PORT, () => {
+    console.log(`Server draait op poort ${PORT}`);
+});
+// Middleware om JSON-data te kunnen ontvangen
+app.use(express.json());
+
+// Server statische bestanden (zoals HTML, CSS en client JS) vanuit de hoofdmap
+app.use(express.static(__dirname));
+
+// Stuur kas.html mee als iemand de hoofd-URL bezoekt
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'kas.html'));
+});
+
+// Verbind met SQLite database
+const db = new sqlite3.Database('./kasboek.db', (err) => {
+    if (err) {
+        console.error('Fout bij open database:', err.message);
+    } else {
+        console.log('Verbonden met de SQLite-database.');
+    }
+});
+
 // Middleware om JSON-data te kunnen ontvangen
 app.use(express.json());
 
