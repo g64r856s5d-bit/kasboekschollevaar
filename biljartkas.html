@@ -1450,20 +1450,23 @@ if (confirm('Verwijder deze wallet mutatie?')) {
         const checkboxes = document.querySelectorAll('input[name="envAccess"]');
         checkboxes.forEach(cb => { cb.checked = true; });
     }
-
-    function deleteUser(index) {
-        if (users.length <= 1) {
-            alert('Je kunt niet de laatste gebruiker verwijderen.');
-            return;
-        }
-        if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
-            users.splice(index, 1);
-            localStorage.setItem('schollevaar_users', JSON.stringify(users));
-            renderUsers();
-            populateUserSelects();
-        }
+function deleteUser(index) {
+    if (users.length <= 1) {
+        alert('Je kunt niet de laatste gebruiker verwijderen.');
+        return;
     }
-
+    if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
+        users.splice(index, 1);
+        localStorage.setItem('schollevaar_users', JSON.stringify(users));
+        
+        // DIT ONTBRUKTE: Sla de nieuwe lijst direct op in de cloud!
+        slaDataOp('schollevaar_users', users);
+        
+        renderUsers();
+        populateUserSelects();
+    }
+}
+    
     function togglePasswordVisibility() {
         const passInput = document.getElementById('wachtwoord');
         if (passInput.type === 'password') {
