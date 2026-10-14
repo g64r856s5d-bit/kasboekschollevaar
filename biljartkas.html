@@ -684,7 +684,6 @@ let users = [
         envAccess: ['Admin', 'Voorraad', 'Storting/Opname', 'Wallet', 'Overzichten']
     }
 ];
-
 // Haal op de achtergrond de meest recente gebruikers op van de centrale server
 (async function() {
     try {
@@ -700,19 +699,19 @@ let users = [
             users = rawUsers;
             console.log('Gebruikers bijgewerkt van centrale server:', users);
         } else {
-            // Als de cloud-lijst leeg is, herstellen we het standaard admin-account
+            // Als de cloud-lijst leeg is, herstellen we het admin-account met admin123
             console.log('Geen gebruikers gevonden in cloud. Standaard admin wordt ingesteld.');
             users = [
                 {
                     naam: "Admin",
                     korteInlog: "admin",
                     email: "",
-                    wachtwoord: "admin",
+                    wachtwoord: "admin123",
                     functie: "1",
                     envAccess: ["admin", "voorraad", "storting", "wallet", "overzichten"]
                 }
             ];
-            // Sla meteen het admin-account op op de server
+            // Sla het admin-account op op de server
             await slaDataOp('schollevaar_users', users);
         }
     } catch (e) {
