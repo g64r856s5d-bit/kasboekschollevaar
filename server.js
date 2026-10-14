@@ -1,5 +1,5 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
+const { createClient } = require("@libsql/client");
 const path = require('path');
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.json());
 // Server statische bestanden vanuit de hoofdmap
 app.use(express.static(path.join(__dirname)));
 
-// Stuur kas.html mee als iemand de hoofd-URL bezoekt
+// Stuur de hoofdpagina mee
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'biljartkas.html'));
 });
@@ -37,52 +37,43 @@ async function initDb() {
     }
 }
 initDb();
-// API Endpoint om data op te halen
-app.get('/api/data/:key', (req, res) => {
-    const key = req.params.key;
-    db.get(`SELECT value FROM app_data WHERE key = ?`, [key], (err, row) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
+
+// API Eindpunt om data op te halen
+app.get('/api/data/:key', async (req, res) => {
+    try {
+        const key = req.params.key;
+        const result = await db.execute({
+            sql: "SELECT value FROM app_data WHERE key = ?",
+            args: [key]
+        });
+        
+        if (result.rows.length > 0) {
+            res.json({ value: JSON.parse(result.rows[0].value) });
         } else {
-            res.json({ value: row ? JSON.parse(row.value) : null });
+            res.json({ value: null });
         }
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-// API Endpoint om data op te slaan
-app.post('/api/data', (req, res) => {
-    const { key, value } = req.body;
-    const stringValue = JSON.stringify(value);
-    
-    db.run(`INSERT INTO app_data (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?`, 
-        [key, stringValue, stringValue], 
-        function(err) {
-            if (err) {
-                res.status(500).json({ error: err.message });
-            } else {
-                res.json({ success: true });
-            }
-        }
-    );
+// API Eindpunt om data op te slaan
+app.post('/api/data', async (req, res) => {
+    try {
+        const { key, value } = req.body;
+        const valueString = JSON.stringify(value);
+        
+        await db.execute({
+            sql: "INSERT INTO app_data (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+            args: [key, valueString]
+        });
+        
+        res.json({ status: "success" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-// Zorg voor standaard startdata als de database nog leeg is
-db.serialize(() => {
-    db.get("SELECT value FROM app_data WHERE key = 'gebruikers'", (err, row) => {
-        if (!row) {
-            const standaardGebruikers = [
-                { naam: 'Admin', korteInlog: 'admin', wachtwoord: 'wachtwoord', functie: '1', envAccess: ['Admin', 'Voorraad', 'Storting/Opname', 'Wallet', 'Overzichten'] }
-            ];
-            db.run("INSERT OR REPLACE INTO app_data (key, value) VALUES ('gebruikers', ?)", [JSON.stringify(standaardGebruikers)], (err) => {
-                if (!err) {
-                    console.log('Standaard gebruikers succesvol aangemaakt in je database!');
-                }
-            });
-        }
-    });
-});
-
-// Start de server
 app.listen(PORT, () => {
     console.log(`Server draait op poort ${PORT}`);
 });
