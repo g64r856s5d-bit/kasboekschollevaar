@@ -1388,24 +1388,24 @@ if (confirm('Verwijder deze wallet mutatie?')) {
     populateUserSelects();
     alert('Gebruiker succesvol opgeslagen in de cloud!');   
 
-
-       
-
-    // 3. Voeg de gebruiker toe of bewerk bestaande
+// Voeg de gebruiker toe of bewerk bestaande
     if (editIndex !== "") {
         users[editIndex] = userData;
     } else {
         users.push(userData);
     }
 
-    // 4. Sla de volledige, bijgewerkte lijst op in de cloud én lokaal
+    // Sla op in lokaal geheugen én direct naar de cloud
     localStorage.setItem('schollevaar_users', JSON.stringify(users));
-    await slaDataOp('schollevaar_users', users);
+    slaDataOp('schollevaar_users', users);
 
     cancelEditUser();
     renderUsers();
     populateUserSelects();
     alert('Gebruiker succesvol opgeslagen in de cloud!');
+       
+
+   
     
     function renderUsers() {
         const tbody = document.getElementById('userTableBody');
