@@ -725,16 +725,6 @@ let drankList = [];
 let stortingList = [];
 let opnameList = [];
 let walletList = [];
-// Verberg of toon alle verwijder-knoppen tegelijk op basis van de rechten
-function pasVerwijderRechtenToe() {
-    const magWissen = magMutatiesVerwijderen();
-    document.querySelectorAll('.btn-verwijder').forEach(knop => {
-        knop.style.display = magWissen ? 'inline-block' : 'none';
-    });
-}
-
-
-
 
     
     localStorage.setItem('schollevaar_users', JSON.stringify(users));
