@@ -711,48 +711,20 @@ let users = [
     }
 })();
 
-    // Controleer of admin ertussen staat; zo niet, voeg hem direct toe
-    const heeftAdmin = users.some(u => u.korteInlog === 'admin');
-    if (!heeftAdmin) {
-        users.unshift({
-            naam: "Admin",
-            korteInlog: "admin",
-            email: "",
-            wachtwoord: "admin123",
-            functie: "1",
-            envAccess: ["admin", "voorraad", "storting", "wallet", "overzichten"]
-        });
-        await slaDataOp('schollevaar_users', users);
-    }
+localStorage.setItem('schollevaar_users', JSON.stringify(users));
 
-    console.log('Geladen gebruikers:', users);
-})();
-        
-        // Als er een geldige lijst van de server komt en die is niet leeg, gebruik die
-        if (Array.isArray(rawUsers) && rawUsers.length > 0) {
-            users = rawUsers;
-            console.log('Gebruikers bijgewerkt van centrale server:', users);
-        } else {
-            // Als de cloud-lijst leeg is, herstellen we het admin-account met admin123
-            console.log('Geen gebruikers gevonden in cloud. Standaard admin wordt ingesteld.');
-            users = [
-                {
-                    naam: "Admin",
-                    korteInlog: "admin",
-                    email: "",
-                    wachtwoord: "admin123",
-                    functie: "1",
-                    envAccess: ["admin", "voorraad", "storting", "wallet", "overzichten"]
-                }
-            ];
-            // Sla het admin-account op op de server
-            await slaDataOp('schollevaar_users', users);
-        }
-    } catch (e) {
-        console.log('Kon server niet bereiken, lokale reservegebruiker wordt gebruikt:', e);
-    }
-})();
+// Verberg of toon alle verwijder-knoppen tegelijk op basis van de rechten
+function pasVerwijderRechtenToe() {
+    const magWissen = magMutatiesVerwijderen();
+    document.querySelectorAll('.btn-verwijder').forEach(knop => {
+        knop.style.display = magWissen ? 'inline-block' : 'none';
+    });
+}
 
+let drankList = [];
+let stortingList = [];
+let opnameList = [];
+let walletList = [];
 // Verberg of toon alle verwijder-knoppen tegelijk op basis van de rechten
 function pasVerwijderRechtenToe() {
     const magWissen = magMutatiesVerwijderen();
