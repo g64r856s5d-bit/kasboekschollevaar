@@ -1377,20 +1377,32 @@ if (confirm('Verwijder deze wallet mutatie?')) {
     alert('Gebruiker succesvol opgeslagen in de cloud!');
 }
 
-    // 2. Voeg de gebruiker toe of bewerk bestaande
+// 2. Verzamel de gegevens uit het formulier in userData
+    const userData = {
+        naam: document.getElementById('gebruikerNaam').value.trim(),
+        korteInlog: document.getElementById('gebruikerInlog').value.trim(),
+        email: document.getElementById('gebruikerEmail').value.trim(),
+        wachtwoord: document.getElementById('gebruikerWachtwoord').value,
+        functie: document.getElementById('gebruikerFunctie').value,
+        envAccess: Array.from(document.querySelectorAll('input[name="envAccess"]:checked')).map(cb => cb.value)
+    };
+
+    // 3. Voeg de gebruiker toe of bewerk bestaande
     if (editIndex !== "") {
         users[editIndex] = userData;
     } else {
         users.push(userData);
     }
 
-    // 3. Sla de volledige, bijgewerkte lijst op in de cloud
-    slaDataOp('schollevaar_users', users);
+    // 4. Sla de volledige, bijgewerkte lijst op in de cloud én lokaal
+    localStorage.setItem('schollevaar_users', JSON.stringify(users));
+    await slaDataOp('schollevaar_users', users);
 
     cancelEditUser();
     renderUsers();
     populateUserSelects();
-
+    alert('Gebruiker succesvol opgeslagen in de cloud!');
+    
     function renderUsers() {
         const tbody = document.getElementById('userTableBody');
         if (!tbody) return;
