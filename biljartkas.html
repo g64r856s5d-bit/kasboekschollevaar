@@ -688,21 +688,37 @@ let users = [
 // Haal op de achtergrond de meest recente gebruikers op van de centrale server
 (async function() {
     try {
-        const response = await fetch('/api/data/users');
+        const response = await fetch('/api/data/schollevaar_users');
         const result = await response.json();
         let rawUsers = result.value;
         if (typeof rawUsers === 'string') {
-            try { rawUsers = JSON.parse(rawUsers); } catch(e) { rawUsers = []; }
+            try { rawUsers = JSON.parse(rawUsers); } catch(e) {}
         }
+        
+        // Als er een geldige lijst van de server komt en die is niet leeg, gebruik die
         if (Array.isArray(rawUsers) && rawUsers.length > 0) {
             users = rawUsers;
-            console.log('Gebruikers bijgewerkt van centrale server:', users.length);
+            console.log('Gebruikers bijgewerkt van centrale server:', users);
+        } else {
+            // Als de cloud-lijst leeg is, herstellen we het standaard admin-account
+            console.log('Geen gebruikers gevonden in cloud. Standaard admin wordt ingesteld.');
+            users = [
+                {
+                    naam: "Admin",
+                    korteInlog: "admin",
+                    email: "",
+                    wachtwoord: "admin",
+                    functie: "1",
+                    envAccess: ["admin", "voorraad", "storting", "wallet", "overzichten"]
+                }
+            ];
+            // Sla meteen het admin-account op op de server
+            await slaDataOp('schollevaar_users', users);
         }
     } catch (e) {
-        console.log('Kon server niet bereiken, lokale reservegebruiker wordt gebruikt.');
+        console.log('Kon server niet bereiken, lokale reservegebruiker wordt gebruikt:', e);
     }
 })();
-
 
 // Verberg of toon alle verwijder-knoppen tegelijk op basis van de rechten
 function pasVerwijderRechtenToe() {
