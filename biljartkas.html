@@ -1321,33 +1321,46 @@ if (confirm('Verwijder deze wallet mutatie?')) {
     }
 
     // ADMIN USERS
-    function saveUser(event) {
-        event.preventDefault();
-        const editIndex = document.getElementById('editIndex').value;
-        const envAccessCheckboxes = document.querySelectorAll('input[name="envAccess"]:checked');
-        const envAccess = Array.from(envAccessCheckboxes).map(cb => cb.value);
+    async function saveUser(event) {
+    event.preventDefault();
+    const editIndex = document.getElementById('editIndex').value;
+    const envAccessCheckboxes = document.querySelectorAll('input[name="envAccess"]:checked');
+    const envAccess = Array.from(envAccessCheckboxes).map(cb => cb.value);
 
-        const userData = {
-            naam: document.getElementById('naam').value.trim(),
-            korteInlog: document.getElementById('korteInlog').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            wachtwoord: document.getElementById('wachtwoord').value,
-            functie: document.getElementById('functie').value,
-            envAccess: envAccess
-        };
+    const userData = {
+        naam: document.getElementById('naam').value.trim(),
+        korteInlog: document.getElementById('korteInlog').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        wachtwoord: document.getElementById('wachtwoord').value,
+        functie: document.getElementById('functie').value,
+        envAccess: envAccess
+    };
 
-        if (editIndex !== "") {
-            users[editIndex] = userData;
-        } else {
-            users.push(userData);
+    // 1. Haal eerst de meest actuele gebruikers op van de server
+    try {
+        const res = await fetch('/api/data/schollevaar_users');
+        const data = await res.json();
+        if (data.value && Array.isArray(data.value)) {
+            users = data.value;
         }
-
-        slaDataOp('schollevaar_users', users);
-       
- cancelEditUser();
-        renderUsers();
-        populateUserSelects();
+    } catch (e) {
+        console.log('Kon actuele gebruikers niet ophalen van server, gebruik lokale stand.');
     }
+
+    // 2. Voeg de gebruiker toe of bewerk bestaande
+    if (editIndex !== "") {
+        users[editIndex] = userData;
+    } else {
+        users.push(userData);
+    }
+
+    // 3. Sla de volledige, bijgewerkte lijst op in de cloud
+    slaDataOp('schollevaar_users', users);
+
+    cancelEditUser();
+    renderUsers();
+    populateUserSelects();
+}
 
     function renderUsers() {
         const tbody = document.getElementById('userTableBody');
