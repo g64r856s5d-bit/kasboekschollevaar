@@ -675,9 +675,19 @@ body {
 </div>
 
 <script>
-let users = [];
+// 1. Direct beschikbaar bij het laden (synchroon), zodat inloggen METEEN werkt:
+let users = [
+    {
+        naam: "Admin",
+        korteInlog: "admin",
+        email: "",
+        wachtwoord: "admin123",
+        functie: "1",
+        envAccess: ["admin", "voorraad", "storting", "wallet", "overzichten"]
+    }
+];
 
-// Haal op de achtergrond de gebruikers op en garandeer dat admin altijd bestaat
+// 2. Haal op de achtergrond de cloud-gebruikers op en voeg ze samen:
 (async function() {
     try {
         const response = await fetch('/api/data/schollevaar_users');
@@ -687,12 +697,19 @@ let users = [];
             try { rawUsers = JSON.parse(rawUsers); } catch(e) {}
         }
         
-        if (Array.isArray(rawUsers)) {
+        if (Array.isArray(rawUsers) && rawUsers.length > 0) {
+            // Zorg dat admin er altijd in blijft staan
+            const heeftAdmin = rawUsers.some(u => u.korteInlog === 'admin');
+            if (!heeftAdmin) {
+                rawUsers.unshift(users[0]);
+            }
             users = rawUsers;
+            console.log('Gebruikers bijgewerkt uit cloud:', users);
         }
     } catch (e) {
-        console.log('Kon server niet bereiken, gebruik lokale fallback:', e);
+        console.log('Kon cloud niet bereiken, lokale fallback actief:', e);
     }
+})();
 
     // Controleer of admin ertussen staat; zo niet, voeg hem direct toe
     const heeftAdmin = users.some(u => u.korteInlog === 'admin');
