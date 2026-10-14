@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SchollevaarKas - Inloggen & Beheer</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --warning: #d97706;
+            --warning-hover: #b45309;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --border-color: #d1d5db;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+body {
+    font-family: system-ui, ...;
+    ...
+    padding: 20px;
+}
+
+.table-scroll-container {
+    max-height: 350px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color, #d1d5db);
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 1300px;
+    ...
+}
+
+
+
+
+
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border: none;
+            background: #e5e7eb;
+            color: var(--text-main);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn-inline {
+            width: auto;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-warning:hover { background: var(--warning-hover); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: var(--danger-hover); }
+        .btn-secondary { background: #4b5563; color: white; }
+        .btn-secondary:hover { background: #374151; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            width: auto;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .scrollable-table-container {
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tfoot td {
+            background-color: #eff6ff;
+            font-weight: bold;
+            color: #1e40af;
+            border-top: 2px solid var(--border-color);
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .text-danger {
+            color: var(--danger) !important;
+            font-weight: 600;
+        }
+
+        .preview-box {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .saldo-card {
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .saldo-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .saldo-card .saldo-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .report-section {
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- INLOGSCHERM OVERLAY -->
+<div id="loginOverlay">
+    <div class="login-card">
+        <h2>SchollevaarKas Inloggen</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="loginUser">Korte Inlognaam</label>
+                <input type="text" id="loginUser" required placeholder="bijv. admin">
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="loginPass">Wachtwoord</label>
+                <input type="password" id="loginPass" required placeholder="wachtwoord">
+            </div>
+            <button type="submit" class="btn btn-primary">Inloggen</button>
+            <p id="loginError" style="color: var(--danger); font-size: 0.85rem; margin-top: 10px; text-align: center; display: none;"></p>
+        </form>
+    </div>
+</div>
+
+<div class="container" id="mainAppContainer" style="display: none;">
+    <header>
+        <h1>SchollevaarKas</h1>
+        <div class="header-actions">
+            <span id="currentUserDisplay">Ingelogd als: -</span>
+            <button class="btn btn-sm btn-secondary btn-inline" onclick="logout()">Uitloggen</button>
+
+<button class="btn btn-danger btn-sm btn-inline btn-verwijder" onclick="resetTestMutations()">Reset Alles</button>
+```
+
+
+
+
+        </div>
+    </header>
+
+    <!-- Navigatie Tabs -->
+    <div class="nav-tabs" id="navTabsContainer">
+        <button class="tab-btn active" id="tab-Admin" onclick="switchTab('admin')">Admin</button>
+        <button class="tab-btn" id="tab-Voorraad" onclick="switchTab('voorraad')">Voorraad</button>
+        <button class="tab-btn" id="tab-Storting/Opname" onclick="switchTab('storting')">Storting / Opname</button>
+        <button class="tab-btn" id="tab-Wallet" onclick="switchTab('wallet')">Wallet</button>
+        <button class="tab-btn" id="tab-Overzichten" onclick="switchTab('overzichten')">Overzichten</button>
+    </div>
+
+    <!-- TAB 1: ADMIN -->
+    <div id="content-admin" class="tab-content active">
+        <h2 id="userFormTitle">Gebruiker Toevoegen</h2>
+        <form id="userForm" onsubmit="saveUser(event)">
+            <input type="hidden" id="editIndex" value="">
+            <div class="form-grid">
+                <div class="form-group"><label>Volledige Naam</label><input type="text" id="naam" required></div>
+                <div class="form-group"><label>Korte Inlognaam</label><input type="text" id="korteInlog" required></div>
+                <div class="form-group"><label>E-mailadres</label><input type="email" id="email" required></div>
+                <div class="form-group">
+                    <label>Wachtwoord</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="password" id="wachtwoord" required style="flex: 1;">
+                        <button type="button" class="btn btn-sm btn-primary btn-inline" onclick="togglePasswordVisibility()">👁</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Functie</label>
+                    <select id="functie">
+                        <option value="0">0. Admin</option>
+                        <option value="1">1. Voorzitter</option>
+                        <option value="2">2. Penningmeester</option>
+                        <option value="3">3. Facilitair</option>
+                        <option value="4" selected>4. Gebruiker</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Omgeving Toegang:</label><br>
+                <label><input type="checkbox" name="envAccess" value="Admin"> Admin</label>
+                <label style="margin-left: 15px;"><input type="checkbox" name="envAccess" value="Voorraad" checked> Voorraad</label>
+                <label style="margin-left: 15px;"><input type="checkbox" name="envAccess" value="Storting/Opname" checked> Storting / Opname</label>
+                <label style="margin-left: 15px;"><input type="checkbox" name="envAccess" value="Wallet" checked> Wallet</label>
+                <label style="margin-left: 15px;"><input type="checkbox" name="envAccess" value="Overzichten" checked> Overzichten</label>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-inline">Gebruiker Opslaan</button>
+                <button type="button" id="cancelEditBtn" class="btn btn-secondary btn-inline" style="display: none;" onclick="cancelEditUser()">Annuleren</button>
+            </div>
+        </form>
+
+        <h3 style="margin-top: 30px;">Bestaande Gebruikers</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>Naam</th><th>Inlog</th><th>Email</th><th>Wachtwoord</th><th>Functie</th><th>Toegang</th><th>Acties</th></tr>
+                </thead>
+                <tbody id="userTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 2: VOORRAAD -->
+    <div id="content-voorraad" class="tab-content">
+        <h2>Voorraad Beheer</h2>
+        <h3>Product Mutatie (Drank & Keuken)</h3>
+        <form id="drankForm" onsubmit="saveVoorraad(event)">
+            <div class="form-grid">
+                <div class="form-group"><label>Datum</label><input type="date" id="drankDatum" required></div>
+                <div class="form-group"><label>Product Naam</label><input type="text" id="drankNaam" required></div>
+                <div class="form-group"><label>Categorie</label><select id="drankCategorie"><option value="Drank">Drank</option><option value="Keuken">Keuken</option></select></div>
+                <div class="form-group"><label>Beginvoorraad</label><input type="number" id="drankBegin" oninput="calcDrankPreview()"></div>
+                <div class="form-group"><label>Inkoop</label><input type="number" id="drankInkoop" oninput="calcDrankPreview()"></div>
+                <div class="form-group"><label>Verkocht / Verbruikt</label><input type="number" id="drankVerkocht" oninput="calcDrankPreview()"></div>
+                <div class="form-group"><label>Verkoopprijs (€)</label><input type="number" step="0.01" id="drankVerkoopprijs" oninput="calcDrankPreview()"></div>
+                <div class="form-group"><label>Inkoopprijs (€)</label><input type="number" step="0.01" id="drankInkoopprijs" oninput="calcDrankPreview()"></div>
+            </div>
+            <div class="preview-box">
+                Omzet: € <span id="drankPreviewOmzet">0,00</span> | Restvoorraad: <span id="drankPreviewRest">0</span> | Voorraadwaarde: € <span id="drankPreviewWaarde">0,00</span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-inline" style="margin-top: 15px;">Product Opslaan</button>
+        </form>
+
+        <h3 style="margin-top: 30px;">Voorraad Overzicht: Drank</h3>
+        <div class="scrollable-table-container">
+            <table>
+                <thead>
+                    <tr><th>Datum</th><th>Product</th><th>Begin</th><th>Inkoop</th><th>Verkocht</th><th>Verkoopprijs</th><th>Omzet</th><th>Rest</th><th>Inkoopprijs</th><th>Waarde</th><th>Actie</th></tr>
+                </thead>
+                <tbody id="drankTableBody"></tbody>
+                <tfoot id="drankTableFoot"></tfoot>
+            </table>
+        </div>
+
+        <h3 style="margin-top: 30px;">Voorraad Overzicht: Keuken</h3>
+        <div class="scrollable-table-container">
+            <table>
+                <thead>
+                    <tr><th>Datum</th><th>Product</th><th>Begin</th><th>Inkoop</th><th>Verbruikt</th><th>Verkoopprijs</th><th>Omzet</th><th>Rest</th><th>Inkoopprijs</th><th>Waarde</th><th>Actie</th></tr>
+                </thead>
+                <tbody id="keukenTableBody"></tbody>
+                <tfoot id="keukenTableFoot"></tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 3: STORTING / OPNAME -->
+    <div id="content-storting" class="tab-content">
+        <h2>Storting & Onkosten</h2>
+        <div class="saldo-card">
+            <div>
+                <h3>Huidig Kassaldo (Totaal in Kas)</h3>
+                <p style="margin: 5px 0 0 0; font-size: 0.85rem; opacity: 0.8;">Som van alle stortingen minus opnames</p>
+            </div>
+            <div><p class="saldo-amount" id="kassaSaldoDisplay">€ 0,00</p></div>
+        </div>
+
+        <form id="stortingForm" onsubmit="saveStorting(event)">
+            <div class="form-grid">
+                <div class="form-group"><label>Datum</label><input type="date" id="stortingDatum" required></div>
+                <div class="form-group"><label>Gebruiker</label><select id="stortingGebruiker" required></select></div>
+                <div class="form-group"><label>Omzet (€)</label><input type="number" step="0.01" id="stortingOmzet" oninput="calcStortingTotaal()"></div>
+            </div>
+
+            <h3 style="margin-top: 20px; font-size: 1.1rem;">Kosten / Onkosten Specificatie</h3>
+            <div class="form-grid">
+                <div class="form-group"><label>Inkoop Drank (7100) (€)</label><input type="number" step="0.01" id="kostenInkoopDrank" class="kosten-input" oninput="calcStortingTotaal()"></div>
+                <div class="form-group"><label>Inkoop Keuken (7110) (€)</label><input type="number" step="0.01" id="kostenInkoopKeuken" class="kosten-input" oninput="calcStortingTotaal()"></div>
+                <div class="form-group"><label>Schoonmaak (4101) (€)</label><input type="number" step="0.01" id="kostenSchoonmaak" class="kosten-input" oninput="calcStortingTotaal()"></div>
+                <div class="form-group"><label>Keuken Bon (4526) (€)</label><input type="number" step="0.01" id="kostenKeukenBon" class="kosten-input" oninput="calcStortingTotaal()"></div>
+                <div class="form-group"><label>Representatie (4520) (€)</label><input type="number" step="0.01" id="kostenRepresentatie" class="kosten-input" oninput="calcStortingTotaal()"></div>
+                <div class="form-group"><label>Kasverschil (4900) (€)</label><input type="number" step="0.01" id="kostenKasverschil" class="kosten-input" oninput="calcStortingTotaal()"></div>
+                <div class="form-group"><label>Barvergoeding (4528) (€)</label><input type="number" step="0.01" id="kostenBarvergoeding" class="kosten-input" value="7.50" oninput="calcStortingTotaal()"></div>
+            </div>
+
+            <div class="preview-box">
+                Totaal Onkosten: € <span id="stortingPreviewOnkosten">7,50</span><br>
+                Totaal te storten bedrag (Omzet - Kosten): € <span id="stortingPreviewTotaal">-7,50</span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-inline" style="margin-top: 15px;">Storting Opslaan</button>
+        </form>
+
+        <h3 style="margin-top: 30px;">Stortingen & Onkosten Overzicht</h3>
+        <div class="scrollable-table-container">
+            <table>
+                <thead>
+                    <tr><th>Datum</th><th>Gebruiker</th><th>Omzet</th><th>Drank</th><th>Keuken</th><th>Schoonmaak</th><th>Bon</th><th>Repres.</th><th>Kasverschil</th><th>Barw.</th><th>Totaal Kosten</th><th>Totaal Storting</th><th>Actie</th></tr>
+                </thead>
+                <tbody id="stortingTableBody"></tbody>
+                <tfoot id="stortingTableFoot"></tfoot>
+            </table>
+        </div>
+
+        <h2 style="margin-top: 40px;">Kassa Opname</h2>
+        <form id="opnameForm" onsubmit="saveOpname(event)">
+            <div class="form-grid">
+                <div class="form-group"><label>Datum</label><input type="date" id="opnameDatum" required></div>
+                <div class="form-group"><label>Gebruiker</label><select id="opnameGebruiker" required></select></div>
+                <div class="form-group"><label>Reden</label><input type="text" id="opnameReden" required></div>
+                <div class="form-group"><label>Bedrag (€)</label><input type="number" step="0.01" id="opnameBedrag" required></div>
+            </div>
+            <button type="submit" class="btn btn-danger btn-inline">Opname Opslaan</button>
+        </form>
+
+        <h3 style="margin-top: 20px;">Opnames Overzicht</h3>
+        <div class="scrollable-table-container">
+            <table>
+                <thead>
+                    <tr><th>Datum</th><th>Gebruiker</th><th>Reden</th><th>Bedrag</th><th>Actie</th></tr>
+                </thead>
+                <tbody id="opnameTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 4: WALLET -->
+    <div id="content-wallet" class="tab-content">
+        <h2>Wallet / Saldo</h2>
+        <div class="saldo-card">
+            <div>
+                <h3>Walletsaldo (Totaal Tegoed)</h3>
+                <p style="margin: 5px 0 0 0; font-size: 0.85rem; opacity: 0.8;">Totaal van alle wallet mutaties</p>
+            </div>
+            <div><p class="saldo-amount" id="walletSaldoDisplay">€ 0,00</p></div>
+        </div>
+
+        <form id="walletForm" onsubmit="saveWallet(event)">
+            <div class="form-grid">
+                <div class="form-group"><label>Datum</label><input type="date" id="walletDatum" required></div>
+                <div class="form-group"><label>Gebruiker</label><select id="walletGebruiker" required></select></div>
+                <div class="form-group"><label>Reden</label><input type="text" id="walletReden" required placeholder="bijv. Tegoed opwaarderen of consumptie"></div>
+                <div class="form-group"><label>Bedrag (€) (Negatief = afschrijving)</label><input type="number" step="0.01" id="walletBedrag" required placeholder="bijv. 10.00 of -2.50"></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-inline">Wallet Mutatie Opslaan</button>
+        </form>
+
+        <h3 style="margin-top: 30px;">Wallet Mutaties Overzicht</h3>
+        <div class="scrollable-table-container">
+            <table>
+                <thead>
+                    <tr><th>Datum</th><th>Gebruiker</th><th>Reden</th><th>Bedrag</th><th>Actie</th></tr>
+                </thead>
+                <tbody id="walletTableBody"></tbody>
+                <tfoot id="walletTableFoot"></tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 5: OVERZICHTEN -->
+    <div id="content-overzichten" class="tab-content">
+        <h2>Rapportage & Overzichten</h2>
+        <p>Selecteer hieronder een datumbereik om rapportages te filteren, printen of exporteren naar Excel.</p>
+
+        <!-- Filterbalk voor rapporten -->
+        <div class="form-grid" style="background: #e5e7eb; padding: 15px; border-radius: 6px; margin-bottom: 25px;">
+            <div class="form-group"><label>Datum Vanaf</label><input type="date" id="filterVan" onchange="renderReports()"></div>
+            <div class="form-group"><label>Datum Tot/met</label><input type="date" id="filterTot" onchange="renderReports()"></div>
+            <div class="form-group" style="display: flex; align-items: flex-end;"><button class="btn btn-secondary" onclick="resetFilters()">Filters Resetten</button></div>
+        </div>
+
+        <!-- 1. Drank Overzicht -->
+        <div class="report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0;">Overzicht Drank</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-sm btn-secondary" onclick="printTable('reportDrankTable')">Print / PDF</button>
+                    <button class="btn btn-sm btn-success" onclick="exportTableToExcel('reportDrankTable', 'Drank_Overzicht.csv')">Exporteer Excel</button>
+                </div>
+            </div>
+            <div class="scrollable-table-container" style="background: white;">
+                <table id="reportDrankTable">
+                    <thead><tr><th>Datum</th><th>Product</th><th>Begin</th><th>Inkoop</th><th>Verkocht</th><th>Prijs</th><th>Omzet</th><th>Rest</th><th>Waarde</th></tr></thead>
+                    <tbody id="reportDrankBody"></tbody>
+                    <tfoot id="reportDrankFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Keuken Overzicht -->
+        <div class="report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0;">Overzicht Keuken</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-sm btn-secondary" onclick="printTable('reportKeukenTable')">Print / PDF</button>
+                    <button class="btn btn-sm btn-success" onclick="exportTableToExcel('reportKeukenTable', 'Keuken_Overzicht.csv')">Exporteer Excel</button>
+                </div>
+            </div>
+            <div class="scrollable-table-container" style="background: white;">
+                <table id="reportKeukenTable">
+                    <thead><tr><th>Datum</th><th>Product</th><th>Begin</th><th>Inkoop</th><th>Verbruikt</th><th>Prijs</th><th>Omzet</th><th>Rest</th><th>Waarde</th></tr></thead>
+                    <tbody id="reportKeukenBody"></tbody>
+                    <tfoot id="reportKeukenFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Storting Overzicht -->
+        <div class="report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0;">Storting Overzicht</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-sm btn-secondary" onclick="printTable('reportStortingTable')">Print / PDF</button>
+                    <button class="btn btn-sm btn-success" onclick="exportTableToExcel('reportStortingTable', 'Storting_Overzicht.csv')">Exporteer Excel</button>
+                </div>
+            </div>
+
+<div class="table-scroll-container" style="background: white;">
+
+
+                <table id="reportStortingTable">
+                    <thead><tr><th>Datum</th><th>Gebruiker</th><th>Omzet</th><th>Totaal Kosten</th><th>Totaal Storting</th></tr></thead>
+                    <tbody id="reportStortingBody"></tbody>
+                    <tfoot id="reportStortingFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. Onkosten Overzicht -->
+        <div class="report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0;">Onkosten Overzicht</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-sm btn-secondary" onclick="printTable('reportOnkostenTable')">Print / PDF</button>
+                    <button class="btn btn-sm btn-success" onclick="exportTableToExcel('reportOnkostenTable', 'Onkosten_Overzicht.csv')">Exporteer Excel</button>
+                </div>
+            </div>
+
+<div class="table-scroll-container" style="background: white;">
+
+
+
+                <table id="reportOnkostenTable">
+                    <thead><tr><th>Datum</th><th>Gebruiker</th><th>Drank (7100)</th><th>Keuken (7110)</th><th>Schoonm. (4101)</th><th>Bon (4526)</th><th>Rep. (4520)</th><th>Kasverschil (4900)</th><th>Barv. (4528)</th><th>Totaal Onkosten</th></tr></thead>
+                    <tbody id="reportOnkostenBody"></tbody>
+                    <tfoot id="reportOnkostenFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. Wallet Overzicht -->
+        <div class="report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0;">Wallet Overzicht</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-sm btn-secondary" onclick="printTable('reportWalletTable')">Print / PDF</button>
+                    <button class="btn btn-sm btn-success" onclick="exportTableToExcel('reportWalletTable', 'Wallet_Overzicht.csv')">Exporteer Excel</button>
+                </div>
+            </div>
+
+<div class="table-scroll-container" style="background: white;">
+
+
+                <table id="reportWalletTable">
+                    <thead><tr><th>Datum</th><th>Gebruiker</th><th>Reden</th><th>Bedrag</th></tr></thead>
+                    <tbody id="reportWalletBody"></tbody>
+                    <tfoot id="reportWalletFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. Opnames Overzicht -->
+        <div class="report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0;">Overzicht Opnames</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-sm btn-secondary" onclick="printTable('reportOpnameTable')">Print / PDF</button>
+                    <button class="btn btn-sm btn-success" onclick="exportTableToExcel('reportOpnameTable', 'Opnames_Overzicht.csv')">Exporteer Excel</button>
+                </div>
+            </div>
+            <div class="scrollable-table-container" style="background: white;">
+                <table id="reportOpnameTable">
+                    <thead><tr><th>Datum</th><th>Gebruiker</th><th>Reden</th><th>Bedrag</th></tr></thead>
+                    <tbody id="reportOpnameBody"></tbody>
+                    <tfoot id="reportOpnameFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let users = [
+    {
+        naam: 'Admin',
+        korteInlog: 'admin',
+        wachtwoord: 'admin123',
+        functie: '1',
+        envAccess: ['Admin', 'Voorraad', 'Storting/Opname', 'Wallet', 'Overzichten']
+    }
+];
+
+// Haal op de achtergrond de meest recente gebruikers op van de centrale server
+(async function() {
+    try {
+        const response = await fetch('/api/data/gebruikers');
+        const result = await response.json();
+        let rawUsers = result.value;
+        if (typeof rawUsers === 'string') {
+            try { rawUsers = JSON.parse(rawUsers); } catch(e) { rawUsers = []; }
+        }
+        if (Array.isArray(rawUsers) && rawUsers.length > 0) {
+            users = rawUsers;
+            console.log('Gebruikers bijgewerkt van centrale server:', users.length);
+        }
+    } catch (e) {
+        console.log('Kon server niet bereiken, lokale reservegebruiker wordt gebruikt.');
+    }
+})();
+
+
+// Verberg of toon alle verwijder-knoppen tegelijk op basis van de rechten
+function pasVerwijderRechtenToe() {
+    const magWissen = magMutatiesVerwijderen();
+    document.querySelectorAll('.btn-verwijder').forEach(knop => {
+        knop.style.display = magWissen ? 'inline-block' : 'none';
+    });
+}
+
+
+
+
+    
+    localStorage.setItem('schollevaar_users', JSON.stringify(users));
+
+let drankList = [];
+let stortingList = [];
+let opnameList = [];
+let walletList = [];
+
+async function laadCentraleData() {
+    try {
+        // Drank / Voorraad
+        const resDrank = await fetch('/api/data/schollevaar_drank');
+        const jsonDrank = await resDrank.json();
+        if (jsonDrank.value) {
+            drankList = typeof jsonDrank.value === 'string' ? JSON.parse(jsonDrank.value) : jsonDrank.value;
+        }
+
+        // Stortingen
+        const resStorting = await fetch('/api/data/schollevaar_storting');
+        const jsonStorting = await resStorting.json();
+        if (jsonStorting.value) {
+            stortingList = typeof jsonStorting.value === 'string' ? JSON.parse(jsonStorting.value) : jsonStorting.value;
+        }
+
+        // Opnames
+        const resOpname = await fetch('/api/data/schollevaar_opname');
+        const jsonOpname = await resOpname.json();
+        if (jsonOpname.value) {
+            opnameList = typeof jsonOpname.value === 'string' ? JSON.parse(jsonOpname.value) : jsonOpname.value;
+        }
+
+        // Wallet
+        const resWallet = await fetch('/api/data/schollevaar_wallet');
+        const jsonWallet = await resWallet.json();
+        if (jsonWallet.value) {
+            walletList = typeof jsonWallet.value === 'string' ? JSON.parse(jsonWallet.value) : jsonWallet.value;
+        }
+
+        console.log('Alle applicatiedata succesvol geladen van de centrale server!');
+    } catch (e) {
+        console.error('Kon centrale data niet ophalen:', e);
+    }
+}
+laadCentraleData();
+
+ let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('stortingDatum').value = today;
+        document.getElementById('opnameDatum').value = today;
+        document.getElementById('drankDatum').value = today;
+        document.getElementById('walletDatum').value = today;
+        
+        const savedUser = sessionStorage.getItem('schollevaar_current_user');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            initAppAfterLogin();
+        } else {
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('mainAppContainer').style.display = 'none';
+        }
+    });
+
+async function slaDataOp(key, data) {
+    try {
+        await fetch('/api/data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: key, value: data })
+        });
+        console.log('Data succesvol opgeslagen op centrale server:', key);
+    } catch (e) {
+        console.error('Fout bij opslaan van ' + key + ':', e);
+    }
+}
+
+
+
+
+    function handleLogin(event) {
+        event.preventDefault();
+        const inputUser = document.getElementById('loginUser').value.trim();
+        const inputPass = document.getElementById('loginPass').value;
+        const errorEl = document.getElementById('loginError');
+
+        const foundUser = users.find(u => (u.korteInlog && u.korteInlog.toLowerCase() === inputUser.toLowerCase()) && u.wachtwoord === inputPass);
+
+        if (foundUser) {
+            currentUser = foundUser;
+            sessionStorage.setItem('schollevaar_current_user', JSON.stringify(currentUser));
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('loginForm').reset();
+            initAppAfterLogin();
+        } else {
+            errorEl.innerText = 'Onjuiste inlognaam of wachtwoord.';
+            errorEl.style.display = 'block';
+        }
+    }
+
+    function logout() {
+        sessionStorage.removeItem('schollevaar_current_user');
+        currentUser = null;
+        document.getElementById('mainAppContainer').style.display = 'none';
+        document.getElementById('loginOverlay').style.display = 'flex';
+    }
+
+function checkEnToestemming() {
+    if (!currentUser) {
+        alert('Je bent niet ingelogd!');
+        return false;
+    }
+    
+    // Altijd toestemming verlenen voor de admin of functie '1'
+    if (currentUser.korteInlog === 'admin' || currentUser.functie === '1') {
+        return true;
+    }
+    
+    alert('Je hebt geen toestemming om deze actie uit te voeren.');
+    return false;
+}
+
+
+
+
+function resetTestMutations() {
+    if (!checkEnToestemming()) return;
+
+    if (confirm('Weet je zeker dat je alle gegevens wilt resetten?')) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+
+    function initAppAfterLogin() {
+        document.getElementById('mainAppContainer').style.display = 'block';
+        document.getElementById('currentUserDisplay').innerText = `Ingelogd als: ${currentUser.naam} (${currentUser.korteInlog})`;
+
+        applyUserPermissions();
+        renderUsers();
+        renderDrank();
+        renderStortingen();
+        renderOpnames();
+        renderWallet();
+        populateUserSelects();
+        calcStortingTotaal();
+        updateKassaSaldo();
+        updateWalletSaldo();
+        renderReports();
+    }
+
+    function applyUserPermissions() {
+        const allTabs = ['Admin', 'Voorraad', 'Storting/Opname', 'Wallet', 'Overzichten'];
+        const userAccess = currentUser.envAccess || allTabs;
+        const loginName = (currentUser.korteInlog || '').toLowerCase();
+
+        allTabs.forEach(tabName => {
+            const btn = document.getElementById(`tab-${tabName}`);
+            const content = document.getElementById(`content-${tabName.toLowerCase().replace('/', '')}`);
+            
+            if (btn && content) {
+                if (userAccess.includes(tabName) || loginName === 'admin') {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                    if (content.classList.contains('active')) {
+                        content.classList.remove('active');
+                    }
+                }
+            }
+        });
+
+        const activeTab = allTabs.find(t => (userAccess.includes(t) || loginName === 'admin'));
+        if (activeTab) {
+            switchTab(activeTab.toLowerCase().replace('/',''));
+        }
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+        const targetContent = document.getElementById(`content-${tabId}`);
+        const targetBtn = document.getElementById(`tab-${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`) || document.getElementById(`tab-${tabId}`);
+
+        if (targetContent) targetContent.classList.add('active');
+        if (targetBtn) targetBtn.classList.add('active');
+    }
+
+    // VOORRAAD BEHEER
+    function calcDrankPreview() {
+        const begin = parseFloat(document.getElementById('drankBegin').value) || 0;
+        const inkoop = parseFloat(document.getElementById('drankInkoop').value) || 0;
+        const verkocht = parseFloat(document.getElementById('drankVerkocht').value) || 0;
+        const verkoopprijs = parseFloat(document.getElementById('drankVerkoopprijs').value) || 0;
+        const inkoopprijs = parseFloat(document.getElementById('drankInkoopprijs').value) || 0;
+
+        const omzet = verkocht * verkoopprijs;
+        const rest = (begin + inkoop) - verkocht;
+        const waarde = rest * inkoopprijs;
+
+        document.getElementById('drankPreviewOmzet').innerText = omzet.toFixed(2).replace('.', ',');
+        document.getElementById('drankPreviewRest').innerText = rest;
+        document.getElementById('drankPreviewWaarde').innerText = waarde.toFixed(2).replace('.', ',');
+    }
+
+    function saveVoorraad(event) {
+        event.preventDefault();
+        const item = {
+            datum: document.getElementById('drankDatum').value,
+            naam: document.getElementById('drankNaam').value.trim(),
+            categorie: document.getElementById('drankCategorie').value,
+            begin: parseFloat(document.getElementById('drankBegin').value) || 0,
+            inkoop: parseFloat(document.getElementById('drankInkoop').value) || 0,
+            verkocht: parseFloat(document.getElementById('drankVerkocht').value) || 0,
+            verkoopprijs: parseFloat(document.getElementById('drankVerkoopprijs').value) || 0,
+            inkoopprijs: parseFloat(document.getElementById('drankInkoopprijs').value) || 0
+        };
+
+drankList.push(item);
+slaDataOp('schollevaar_drank', drankList);
+        
+
+document.getElementById('drankForm').reset();
+        
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('drankDatum').value = today;
+        calcDrankPreview();
+        renderDrank();
+        renderReports();
+    }
+
+    function renderDrank() {
+        const tbodyDrank = document.getElementById('drankTableBody');
+        const tfootDrank = document.getElementById('drankTableFoot');
+        const tbodyKeuken = document.getElementById('keukenTableBody');
+        const tfootKeuken = document.getElementById('keukenTableFoot');
+        
+        if (!tbodyDrank || !tbodyKeuken) return;
+
+        tbodyDrank.innerHTML = '';
+        tbodyKeuken.innerHTML = '';
+
+        let totOmzetDrank = 0, totWaardeDrank = 0;
+        let totOmzetKeuken = 0, totWaardeKeuken = 0;
+
+        drankList.forEach((item, index) => {
+            const omzet = (item.verkocht || 0) * (item.verkoopprijs || 0);
+            const rest = ((item.begin || 0) + (item.inkoop || 0)) - (item.verkocht || 0);
+            const waarde = rest * (item.inkoopprijs || 0);
+
+            const isKeuken = item.categorie === 'Keuken';
+            if (isKeuken) {
+                totOmzetKeuken += omzet;
+                totWaardeKeuken += waarde;
+            } else {
+                totOmzetDrank += omzet;
+                totWaardeDrank += waarde;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.datum || ''}</td>
+                <td>${item.naam || ''}</td>
+                <td>${item.begin || 0}</td>
+                <td>${item.inkoop || 0}</td>
+                <td>${item.verkocht || 0}</td>
+                <td>€ ${(item.verkoopprijs || 0).toFixed(2).replace('.', ',')}</td>
+                <td>€ ${omzet.toFixed(2).replace('.', ',')}</td>
+                <td>${rest}</td>
+                <td>€ ${(item.inkoopprijs || 0).toFixed(2).replace('.', ',')}</td>
+                <td>€ ${waarde.toFixed(2).replace('.', ',')}</td>
+
+<td><button class="btn btn-danger btn-sm btn-verwijder" onclick="${isKeuken ? 'deleteKeuken' : 'deleteDrank'}(${index})">X</button></td>
+
+            `;
+
+            if (isKeuken) {
+                tbodyKeuken.appendChild(tr);
+            } else {
+                tbodyDrank.appendChild(tr);
+            }
+        });
+
+        if (tfootDrank) {
+            tfootDrank.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: right; font-weight: 600;">Totaal Drank:</td>
+                    <td style="font-weight: bold;">€ ${totOmzetDrank.toFixed(2).replace('.', ',')}</td>
+                    <td colspan="2" style="text-align: right; font-weight: 600;">Tot. Waarde:</td>
+                    <td style="font-weight: bold;" colspan="2">€ ${totWaardeDrank.toFixed(2).replace('.', ',')}</td>
+                </tr>
+            `;
+        }
+
+        if (tfootKeuken) {
+            tfootKeuken.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: right; font-weight: 600;">Totaal Keuken:</td>
+                    <td style="font-weight: bold;">€ ${totOmzetKeuken.toFixed(2).replace('.', ',')}</td>
+                    <td colspan="2" style="text-align: right; font-weight: 600;">Tot. Waarde:</td>
+                    <td style="font-weight: bold;" colspan="2">€ ${totWaardeKeuken.toFixed(2).replace('.', ',')}</td>
+                </tr>
+            `;
+        }
+    }
+
+function deleteDrank(index) {
+    if (!checkEnToestemming()) return;
+
+    if (confirm('Verwijder dit product?')) {
+        drankList.splice(index, 1);
+
+slaDataOp('schollevaar_drank', drankList); 
+
+        renderDrank();
+        updateKassaSaldo();
+        renderReports();
+    }
+}
+
+
+
+function deleteKeuken(index) {
+    if (!checkEnToestemming()) return;
+
+    if (confirm('Verwijder dit keukenproduct?')) {
+        keukenList.splice(index, 1);
+
+slaDataOp('schollevaar_keuken', keukenList);
+
+        renderKeuken();
+        updateKassaSaldo();
+        renderReports();
+    }
+}
+
+
+
+    // --- STORTING & ONKOSTEN ---
+function calcStortingTotaal() {
+    const omzet = parseFloat(document.getElementById('stortingOmzet').value) || 0;
+    
+    // Optellen van de kosten, maar sluit 'kostenKeukenBon' en 'kostenRepresentatie' uit
+    const kostenInputs = document.querySelectorAll('.kosten-input');
+    let totaalKosten = 0;
+    
+    kostenInputs.forEach(input => {
+        // Controleer of de ID van het veld NIET de bon of representatie is
+        if (input.id !== 'kostenKeukenBon' && input.id !== 'kostenRepresentatie') {
+            totaalKosten += parseFloat(input.value) || 0;
+        }
+    });
+    
+    const totaalStorting = omzet - totaalKosten;
+    
+    document.getElementById('stortingPreviewOnkosten').innerText = totaalKosten.toFixed(2).replace('.', ',');
+    document.getElementById('stortingPreviewTotaal').innerText = totaalStorting.toFixed(2).replace('.', ',');
+}
+
+    function saveStorting(event) {
+        event.preventDefault();
+        const item = {
+            datum: document.getElementById('stortingDatum').value,
+            gebruiker: document.getElementById('stortingGebruiker').value,
+            omzet: parseFloat(document.getElementById('stortingOmzet').value) || 0,
+            drank: parseFloat(document.getElementById('kostenInkoopDrank').value) || 0,
+            keuken: parseFloat(document.getElementById('kostenInkoopKeuken').value) || 0,
+            schoonmaak: parseFloat(document.getElementById('kostenSchoonmaak').value) || 0,
+            bon: parseFloat(document.getElementById('kostenKeukenBon').value) || 0,
+            representatie: parseFloat(document.getElementById('kostenRepresentatie').value) || 0,
+            kasverschil: parseFloat(document.getElementById('kostenKasverschil').value) || 0,
+            barvergoeding: parseFloat(document.getElementById('kostenBarvergoeding').value) || 0
+        };
+
+        item.totaalKosten = item.drank + item.keuken + item.schoonmaak + item.bon + item.representatie + item.kasverschil + item.barvergoeding;
+        item.totaalStorting = item.omzet - item.totaalKosten;
+
+stortingList.push(item);
+slaDataOp('schollevaar_storting', stortingList);
+
+
+document.getElementById('stortingForm').reset();
+        
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('stortingDatum').value = today;
+        document.getElementById('kostenBarvergoeding').value = "7.50";
+        populateUserSelects(); 
+        calcStortingTotaal();
+        renderStortingen();
+        updateKassaSaldo();
+        renderReports();
+    }
+
+    function renderStortingen() {
+        const tbody = document.getElementById('stortingTableBody');
+        const tfoot = document.getElementById('stortingTableFoot');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+        let totOmzet = 0, totKosten = 0, totStorting = 0;
+
+        stortingList.forEach((item, index) => {
+            totOmzet += item.omzet;
+            totKosten += item.totaalKosten;
+            totStorting += item.totaalStorting;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.datum}</td>
+                <td>${item.gebruiker}</td>
+                <td>€ ${item.omzet.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.drank.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.keuken.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.schoonmaak.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.bon.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.representatie.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.kasverschil.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.barvergoeding.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.totaalKosten.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.totaalStorting.toFixed(2).replace('.', ',')}</td>
+                
+<td><button class="btn btn-danger btn-sm btn-verwijder" onclick="deleteStorting(${index})">X</button></td>
+
+
+            `;
+            tbody.appendChild(tr);
+        });
+
+        if (tfoot) {
+            tfoot.innerHTML = `
+                <tr>
+                    <td colspan="2" style="text-align: right;">Totaal:</td>
+                    <td>€ ${totOmzet.toFixed(2).replace('.', ',')}</td>
+                    <td colspan="7"></td>
+                    <td>€ ${totKosten.toFixed(2).replace('.', ',')}</td>
+                    <td>€ ${totStorting.toFixed(2).replace('.', ',')}</td>
+                    <td></td>
+                </tr>
+            `;
+        }
+    }
+
+function deleteStorting(index) {
+    if (!checkEnToestemming()) return;
+
+    if (confirm('Verwijder deze storting?')) {
+        stortingList.splice(index, 1);
+        localStorage.setItem('schollevaar_storting', JSON.stringify(stortingList));
+        renderStortingen();
+        updateKassaSaldo();
+        renderReports();
+    }
+}
+
+
+            
+
+    // KASSA OPNAME
+    function saveOpname(event) {
+        event.preventDefault();
+        const item = {
+            datum: document.getElementById('opnameDatum').value,
+            gebruiker: document.getElementById('opnameGebruiker').value,
+            reden: document.getElementById('opnameReden').value,
+            bedrag: parseFloat(document.getElementById('opnameBedrag').value) || 0
+        };
+
+opnameList.push(item);
+slaDataOp('schollevaar_opname', opnameList);
+
+
+        document.getElementById('opnameForm').reset();
+        document.getElementById('opnameDatum').value = new Date().toISOString().split('T')[0];
+        populateUserSelects(); 
+        renderOpnames();
+        updateKassaSaldo();
+        renderReports();
+    }
+
+    function renderOpnames() {
+        const tbody = document.getElementById('opnameTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        opnameList.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.datum}</td>
+                <td>${item.gebruiker}</td>
+                <td>${item.reden}</td>
+                <td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td>
+
+ <td><button class="btn btn-danger btn-sm btn-verwijder" onclick="deleteOpname(${index})">X</button></td>
+
+
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+ 
+function deleteOpname(index) {
+    if (!checkEnToestemming()) return;
+
+    if (confirm('Verwijder deze opname?')) {
+        opnameList.splice(index, 1);
+        localStorage.setItem('schollevaar_opname', JSON.stringify(opnameList));
+        renderOpnames();
+        updateKassaSaldo();
+        renderReports();
+    }
+}
+
+
+    function updateKassaSaldo() {
+        let totaalStortingen = stortingList.reduce((acc, item) => acc + item.totaalStorting, 0);
+        let totaalOpnames = opnameList.reduce((acc, item) => acc + item.bedrag, 0);
+        let saldo = totaalStortingen - totaalOpnames;
+
+        const display = document.getElementById('kassaSaldoDisplay');
+        if (display) {
+            display.innerText = `€ ${saldo.toFixed(2).replace('.', ',')}`;
+        }
+    }
+
+    // WALLET BEHEER
+    function saveWallet(event) {
+        event.preventDefault();
+        const item = {
+            datum: document.getElementById('walletDatum').value,
+            gebruiker: document.getElementById('walletGebruiker').value,
+            reden: document.getElementById('walletReden').value,
+            bedrag: parseFloat(document.getElementById('walletBedrag').value) || 0
+        };
+
+ walletList.push(item);
+slaDataOp('schollevaar_wallet', walletList);
+
+document.getElementById('walletForm').reset();
+        document.getElementById('walletDatum').value = new Date().toISOString().split('T')[0];
+        populateUserSelects(); 
+        renderWallet();
+        updateWalletSaldo();
+        renderReports();
+    }
+
+    function renderWallet() {
+        const tbody = document.getElementById('walletTableBody');
+        const tfoot = document.getElementById('walletTableFoot');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        let totaalBedrag = 0;
+
+        walletList.forEach((item, index) => {
+            totaalBedrag += item.bedrag;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.datum}</td>
+                <td>${item.gebruiker}</td>
+                <td>${item.reden}</td>
+                <td class="${item.bedrag < 0 ? 'text-danger' : ''}">€ ${item.bedrag.toFixed(2).replace('.', ',')}</td>
+
+<td><button class="btn btn-danger btn-sm btn-verwijder" onclick="deleteWallet(${index})">X</button></td>                
+
+
+            `;
+            tbody.appendChild(tr);
+        });
+
+        if (tfoot) {
+            tfoot.innerHTML = `
+                <tr>
+                    <td colspan="3" style="text-align: right;">Totaal:</td>
+                    <td colspan="2">€ ${totaalBedrag.toFixed(2).replace('.', ',')}</td>
+                </tr>
+            `;
+        }
+    }
+
+    function deleteWallet(index) {
+    if (!checkEnToestemming()) return;    
+
+if (confirm('Verwijder deze wallet mutatie?')) {
+            walletList.splice(index, 1);
+           
+
+
+ localStorage.setItem('schollevaar_wallet', JSON.stringify(walletList));
+            renderWallet();
+            updateWalletSaldo();
+            renderReports();
+        }
+    }
+
+    function updateWalletSaldo() {
+        let saldo = walletList.reduce((acc, item) => acc + item.bedrag, 0);
+        const display = document.getElementById('walletSaldoDisplay');
+        if (display) {
+            display.innerText = `€ ${saldo.toFixed(2).replace('.', ',')}`;
+        }
+    }
+
+    // ADMIN USERS
+    function saveUser(event) {
+        event.preventDefault();
+        const editIndex = document.getElementById('editIndex').value;
+        const envAccessCheckboxes = document.querySelectorAll('input[name="envAccess"]:checked');
+        const envAccess = Array.from(envAccessCheckboxes).map(cb => cb.value);
+
+        const userData = {
+            naam: document.getElementById('naam').value.trim(),
+            korteInlog: document.getElementById('korteInlog').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            wachtwoord: document.getElementById('wachtwoord').value,
+            functie: document.getElementById('functie').value,
+            envAccess: envAccess
+        };
+
+        if (editIndex !== "") {
+            users[editIndex] = userData;
+        } else {
+            users.push(userData);
+        }
+
+        slaDataOp('schollevaar_users', users);
+       
+ cancelEditUser();
+        renderUsers();
+        populateUserSelects();
+    }
+
+    function renderUsers() {
+        const tbody = document.getElementById('userTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        users.forEach((u, index) => {
+            const naam = u.naam || '-';
+            const inlog = u.korteInlog || '-';
+            const email = u.email || '-';
+            const functie = u.functie || '4';
+            const access = (u.envAccess || []).join(', ');
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${naam}</td>
+                <td>${inlog}</td>
+                <td>${email}</td>
+                <td>••••••</td>
+                <td>${functie}</td>
+                <td>${access}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" onclick="editUser(${index})">Bewerk</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteUser(${index})">X</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function editUser(index) {
+        const u = users[index];
+        document.getElementById('editIndex').value = index;
+        document.getElementById('naam').value = u.naam || '';
+        document.getElementById('korteInlog').value = u.korteInlog || '';
+        document.getElementById('email').value = u.email || '';
+        document.getElementById('wachtwoord').value = u.wachtwoord || '';
+        document.getElementById('functie').value = u.functie || '4';
+
+        const checkboxes = document.querySelectorAll('input[name="envAccess"]');
+        const userAccess = u.envAccess || ['Admin', 'Voorraad', 'Storting/Opname', 'Wallet', 'Overzichten'];
+        checkboxes.forEach(cb => {
+            cb.checked = userAccess.includes(cb.value);
+        });
+
+        document.getElementById('userFormTitle').innerText = "Gebruiker Bewerken";
+        document.getElementById('submitBtn').innerText = "Bijwerken";
+        document.getElementById('cancelEditBtn').style.display = "inline-block";
+    }
+
+    function cancelEditUser() {
+        document.getElementById('userForm').reset();
+        document.getElementById('editIndex').value = "";
+        document.getElementById('userFormTitle').innerText = "Gebruiker Toevoegen";
+        document.getElementById('submitBtn').innerText = "Gebruiker Opslaan";
+        document.getElementById('cancelEditBtn').style.display = "none";
+        
+        const checkboxes = document.querySelectorAll('input[name="envAccess"]');
+        checkboxes.forEach(cb => { cb.checked = true; });
+    }
+
+    function deleteUser(index) {
+        if (users.length <= 1) {
+            alert('Je kunt niet de laatste gebruiker verwijderen.');
+            return;
+        }
+        if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
+            users.splice(index, 1);
+            localStorage.setItem('schollevaar_users', JSON.stringify(users));
+            renderUsers();
+            populateUserSelects();
+        }
+    }
+
+    function togglePasswordVisibility() {
+        const passInput = document.getElementById('wachtwoord');
+        if (passInput.type === 'password') {
+            passInput.type = 'text';
+        } else {
+            passInput.type = 'password';
+        }
+    }
+
+function populateUserSelects() {
+    const selects = ['stortingGebruiker', 'walletGebruiker', 'opnameGebruiker'];
+    const isAdmin = currentUser && currentUser.korteInlog && currentUser.korteInlog.toLowerCase() === 'admin';
+    
+    selects.forEach(selectId => {
+        const selectEl = document.getElementById(selectId);
+        if (selectEl) {
+            selectEl.innerHTML = '';
+            users.forEach(u => {
+                const naam = u.naam;
+                const inlog = u.korteInlog;
+                const opt = document.createElement('option');
+                opt.value = naam;
+                opt.textContent = inlog ? `${naam} (${inlog})` : naam;
+                
+                if (currentUser && naam === currentUser.naam) {
+                    opt.selected = true;
+                }
+                selectEl.appendChild(opt);
+            });
+            
+            // Als de ingelogde gebruiker geen admin is, blokkeer het veld zodat ze dit niet kunnen wijzigen
+            if (!isAdmin) {
+                selectEl.disabled = true;
+            } else {
+                selectEl.disabled = false; // Admin mag wel iemand anders kiezen
+            }
+        }
+    });
+}
+// OVERZICHTEN & RAPPORTEN
+    function renderReports() {
+        const van = document.getElementById('filterVan').value;
+        const tot = document.getElementById('filterTot').value;
+
+        const filterDate = (itemDate) => {
+            if (van && itemDate < van) return false;
+            if (tot && itemDate > tot) return false;
+            return true;
+        };
+
+        // 1. Drank Rapport (9 kolommen)
+        const repDrankBody = document.getElementById('reportDrankBody');
+        const repDrankFoot = document.getElementById('reportDrankFoot');
+        repDrankBody.innerHTML = '';
+        let rDrankOmzet = 0, rDrankWaarde = 0;
+
+        drankList.filter(i => (i.categorie !== 'Keuken') && filterDate(i.datum)).forEach(item => {
+            const omzet = (item.verkocht || 0) * (item.verkoopprijs || 0);
+            const rest = ((item.begin || 0) + (item.inkoop || 0)) - (item.verkocht || 0);
+            const waarde = rest * (item.inkoopprijs || 0);
+            rDrankOmzet += omzet;
+            rDrankWaarde += waarde;
+
+            repDrankBody.innerHTML += `<tr>
+                <td>${item.datum}</td><td>${item.naam}</td><td>${item.begin}</td><td>${item.inkoop}</td><td>${item.verkocht}</td>
+                <td>€ ${(item.verkoopprijs || 0).toFixed(2).replace('.', ',')}</td><td>€ ${omzet.toFixed(2).replace('.', ',')}</td>
+                <td>${rest}</td><td>€ ${waarde.toFixed(2).replace('.', ',')}</td>
+            </tr>`;
+        });
+        repDrankFoot.innerHTML = `<tr>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
+            <td>€ ${rDrankOmzet.toFixed(2).replace('.', ',')}</td>
+            <td></td>
+            <td>€ ${rDrankWaarde.toFixed(2).replace('.', ',')}</td>
+        </tr>`;
+
+        // 2. Keuken Rapport (9 kolommen)
+        const repKeukenBody = document.getElementById('reportKeukenBody');
+        const repKeukenFoot = document.getElementById('reportKeukenFoot');
+        repKeukenBody.innerHTML = '';
+        let rKeukenOmzet = 0, rKeukenWaarde = 0;
+
+        drankList.filter(i => (i.categorie === 'Keuken') && filterDate(i.datum)).forEach(item => {
+            const omzet = (item.verkocht || 0) * (item.verkoopprijs || 0);
+            const rest = ((item.begin || 0) + (item.inkoop || 0)) - (item.verkocht || 0);
+            const waarde = rest * (item.inkoopprijs || 0);
+            rKeukenOmzet += omzet;
+            rKeukenWaarde += waarde;
+
+            repKeukenBody.innerHTML += `<tr>
+                <td>${item.datum}</td><td>${item.naam}</td><td>${item.begin}</td><td>${item.inkoop}</td><td>${item.verkocht}</td>
+                <td>€ ${(item.verkoopprijs || 0).toFixed(2).replace('.', ',')}</td><td>€ ${omzet.toFixed(2).replace('.', ',')}</td>
+                <td>${rest}</td><td>€ ${waarde.toFixed(2).replace('.', ',')}</td>
+            </tr>`;
+        });
+        repKeukenFoot.innerHTML = `<tr>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
+            <td>€ ${rKeukenOmzet.toFixed(2).replace('.', ',')}</td>
+            <td></td>
+            <td>€ ${rKeukenWaarde.toFixed(2).replace('.', ',')}</td>
+        </tr>`;
+
+        // 3. Storting Rapport (5 kolommen)
+        const repStortingBody = document.getElementById('reportStortingBody');
+        const repStortingFoot = document.getElementById('reportStortingFoot');
+        repStortingBody.innerHTML = '';
+        let rStortOmzet = 0, rStortKosten = 0, rStortBedrag = 0;
+
+        stortingList.filter(i => filterDate(i.datum)).forEach(item => {
+            rStortOmzet += item.omzet;
+            rStortKosten += item.totaalKosten;
+            rStortBedrag += item.totaalStorting;
+            repStortingBody.innerHTML += `<tr>
+                <td>${item.datum}</td><td>${item.gebruiker}</td><td>€ ${item.omzet.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.totaalKosten.toFixed(2).replace('.', ',')}</td><td>€ ${item.totaalStorting.toFixed(2).replace('.', ',')}</td>
+            </tr>`;
+        });
+        repStortingFoot.innerHTML = `<tr>
+            <td></td>
+            <td style="text-align:right;">Totaal:</td>
+            <td>€ ${rStortOmzet.toFixed(2).replace('.', ',')}</td>
+            <td>€ ${rStortKosten.toFixed(2).replace('.', ',')}</td>
+            <td>€ ${rStortBedrag.toFixed(2).replace('.', ',')}</td>
+        </tr>`;
+
+        // 4. Onkosten Rapport (10 kolommen)
+        const repOnkostenBody = document.getElementById('reportOnkostenBody');
+        const repOnkostenFoot = document.getElementById('reportOnkostenFoot');
+        repOnkostenBody.innerHTML = '';
+        let rDrankK = 0, rKeukK = 0, rSchoonK = 0, rBonK = 0, rRepK = 0, rKasK = 0, rBarK = 0, rTotK = 0;
+
+        stortingList.filter(i => filterDate(i.datum)).forEach(item => {
+            rDrankK += item.drank; rKeukK += item.keuken; rSchoonK += item.schoonmaak; rBonK += item.bon;
+            rRepK += item.representatie; rKasK += item.kasverschil; rBarK += item.barvergoeding; rTotK += item.totaalKosten;
+
+            repOnkostenBody.innerHTML += `<tr>
+                <td>${item.datum}</td><td>${item.gebruiker}</td>
+                <td>€ ${item.drank.toFixed(2).replace('.', ',')}</td><td>€ ${item.keuken.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.schoonmaak.toFixed(2).replace('.', ',')}</td><td>€ ${item.bon.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.representatie.toFixed(2).replace('.', ',')}</td><td>€ ${item.kasverschil.toFixed(2).replace('.', ',')}</td>
+                <td>€ ${item.barvergoeding.toFixed(2).replace('.', ',')}</td><td>€ ${item.totaalKosten.toFixed(2).replace('.', ',')}</td>
+            </tr>`;
+        });
+        repOnkostenFoot.innerHTML = `<tr>
+            <td></td>
+            <td style="text-align:right;">Totaal:</td>
+            <td>€ ${rDrankK.toFixed(2).replace('.', ',')}</td><td>€ ${rKeukK.toFixed(2).replace('.', ',')}</td>
+            <td>€ ${rSchoonK.toFixed(2).replace('.', ',')}</td><td>€ ${rBonK.toFixed(2).replace('.', ',')}</td>
+            <td>€ ${rRepK.toFixed(2).replace('.', ',')}</td><td>€ ${rKasK.toFixed(2).replace('.', ',')}</td>
+            <td>€ ${rBarK.toFixed(2).replace('.', ',')}</td><td>€ ${rTotK.toFixed(2).replace('.', ',')}</td>
+        </tr>`;
+
+        // 5. Wallet Rapport (4 kolommen)
+        const repWalletBody = document.getElementById('reportWalletBody');
+        const repWalletFoot = document.getElementById('reportWalletFoot');
+        repWalletBody.innerHTML = '';
+        let rWalletBedrag = 0;
+
+        walletList.filter(i => filterDate(i.datum)).forEach(item => {
+            rWalletBedrag += item.bedrag;
+            repWalletBody.innerHTML += `<tr><td>${item.datum}</td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
+        });
+        repWalletFoot.innerHTML = `<tr>
+            <td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
+            <td>€ ${rWalletBedrag.toFixed(2).replace('.', ',')}</td>
+        </tr>`;
+
+        // 6. Opnames Rapport (4 kolommen)
+        const repOpnameBody = document.getElementById('reportOpnameBody');
+        const repOpnameFoot = document.getElementById('reportOpnameFoot');
+        repOpnameBody.innerHTML = '';
+        let rOpnameBedrag = 0;
+
+        opnameList.filter(i => filterDate(i.datum)).forEach(item => {
+            rOpnameBedrag += item.bedrag;
+            repOpnameBody.innerHTML += `<tr><td>${item.datum}</td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
+        });
+        repOpnameFoot.innerHTML = `<tr>
+            <td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
+            <td>€ ${rOpnameBedrag.toFixed(2).replace('.', ',')}</td>
+        </tr>`;
+    }
+
+    function resetFilters() {
+        document.getElementById('filterVan').value = '';
+        document.getElementById('filterTot').value = '';
+        renderReports();
+    }
+
+    function printTable(tableId) {
+        const tableHTML = document.getElementById(tableId).outerHTML;
+        const win = window.open('', '', 'height=700,width=900');
+        win.document.write('<html><head><title>Print Overzicht</title>');
+        win.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 12px; }</style>');
+        win.document.write('</head><body>');
+        win.document.write('<h2>SchollevaarKas - Rapport</h2>');
+        win.document.write(tableHTML);
+        win.document.write('</body></html>');
+        win.document.close();
+        win.print();
+    }
+
+    function exportTableToExcel(tableId, filename = 'export.csv') {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        let csv = [];
+        for (let row of table.rows) {
+            let rowData = [];
+            for (let cell of row.cells) {
+                rowData.push('"' + cell.innerText.replace(/"/g, '""') + '"');
+            }
+            csv.push(rowData.join(';'));
+        }
+        const blob = new Blob(["\ufeff" + csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+    }
+</script>
+</body>
+</html>
