@@ -675,17 +675,9 @@ body {
 </div>
 
 <script>
-let users = [
-    {
-        naam: 'Admin',
-        korteInlog: 'admin',
-        wachtwoord: 'admin123',
-        functie: '1',
-        envAccess: ['Admin', 'Voorraad', 'Storting/Opname', 'Wallet', 'Overzichten']
-    }
-];
-    
-// Haal op de achtergrond de meest recente gebruikers op van de centrale server
+let users = [];
+
+// Haal op de achtergrond de gebruikers op en garandeer dat admin altijd bestaat
 (async function() {
     try {
         const response = await fetch('/api/data/schollevaar_users');
@@ -694,6 +686,30 @@ let users = [
         if (typeof rawUsers === 'string') {
             try { rawUsers = JSON.parse(rawUsers); } catch(e) {}
         }
+        
+        if (Array.isArray(rawUsers)) {
+            users = rawUsers;
+        }
+    } catch (e) {
+        console.log('Kon server niet bereiken, gebruik lokale fallback:', e);
+    }
+
+    // Controleer of admin ertussen staat; zo niet, voeg hem direct toe
+    const heeftAdmin = users.some(u => u.korteInlog === 'admin');
+    if (!heeftAdmin) {
+        users.unshift({
+            naam: "Admin",
+            korteInlog: "admin",
+            email: "",
+            wachtwoord: "admin123",
+            functie: "1",
+            envAccess: ["admin", "voorraad", "storting", "wallet", "overzichten"]
+        });
+        await slaDataOp('schollevaar_users', users);
+    }
+
+    console.log('Geladen gebruikers:', users);
+})();
         
         // Als er een geldige lijst van de server komt en die is niet leeg, gebruik die
         if (Array.isArray(rawUsers) && rawUsers.length > 0) {
