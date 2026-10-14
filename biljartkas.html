@@ -1368,16 +1368,7 @@ if (confirm('Verwijder deze wallet mutatie?')) {
         users.push(userData);
     }
 
-    // 3. Direct opslaan naar de cloud via slaDataOp
-    await slaDataOp('schollevaar_users', users);
-
-    cancelEditUser();
-    renderUsers();
-    populateUserSelects();
-    alert('Gebruiker succesvol opgeslagen in de cloud!');
-}
-
-// 2. Verzamel de gegevens uit het formulier in userData
+// 1. Verzamel de gegevens uit het formulier in userData
     const userData = {
         naam: document.getElementById('gebruikerNaam').value.trim(),
         korteInlog: document.getElementById('gebruikerInlog').value.trim(),
@@ -1386,6 +1377,25 @@ if (confirm('Verwijder deze wallet mutatie?')) {
         functie: document.getElementById('gebruikerFunctie').value,
         envAccess: Array.from(document.querySelectorAll('input[name="envAccess"]:checked')).map(cb => cb.value)
     };
+
+    // 2. Voeg de gebruiker toe of bewerk bestaande
+    if (editIndex !== "") {
+        users[editIndex] = userData;
+    } else {
+        users.push(userData);
+    }
+
+    // 3. Sla op in lokaal geheugen én direct naar de cloud (zonder await)
+    localStorage.setItem('schollevaar_users', JSON.stringify(users));
+    slaDataOp('schollevaar_users', users);
+
+    cancelEditUser();
+    renderUsers();
+    populateUserSelects();
+    alert('Gebruiker succesvol opgeslagen in de cloud!');   
+
+
+       
 
     // 3. Voeg de gebruiker toe of bewerk bestaande
     if (editIndex !== "") {
