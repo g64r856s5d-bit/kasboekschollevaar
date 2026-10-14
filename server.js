@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
 // Middleware om JSON-data te kunnen ontvangen
 app.use(express.json());
 
