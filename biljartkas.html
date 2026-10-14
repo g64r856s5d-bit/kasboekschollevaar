@@ -688,7 +688,7 @@ let users = [
 // Haal op de achtergrond de meest recente gebruikers op van de centrale server
 (async function() {
     try {
-        const response = await fetch('/api/data/gebruikers');
+        const response = await fetch('/api/data/users');
         const result = await response.json();
         let rawUsers = result.value;
         if (typeof rawUsers === 'string') {
