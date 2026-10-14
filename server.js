@@ -5,12 +5,11 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
 // Middleware om JSON-data te kunnen ontvangen
 app.use(express.json());
 
-// Server statische bestanden (zoals HTML, CSS en client JS) vanuit de hoofdmap
-app.use(express.static(__dirname));
+// Server statische bestanden vanuit de hoofdmap
+app.use(express.static(path.join(__dirname)));
 
 // Stuur kas.html mee als iemand de hoofd-URL bezoekt
 app.get('/', (req, res) => {
@@ -20,9 +19,9 @@ app.get('/', (req, res) => {
 // Verbind met SQLite database
 const db = new sqlite3.Database('./kasboek.db', (err) => {
     if (err) {
-        console.error('Fout bij open database:', err.message);
+        console.error('Fout bij openen database:', err.message);
     } else {
-        console.log('Verbonden met de SQLite-database.');
+        console.log('Verbonden met de SQLite database.');
     }
 });
 
@@ -37,88 +36,6 @@ db.run(`CREATE TABLE IF NOT EXISTS app_data (
         console.log('Database tabel gecontroleerd/aangemaakt.');
     }
 });
-
-// Start de server
-app.listen(PORT, () => {
-    console.log(`Server draait op poort ${PORT}`);
-});
-// Middleware om JSON-data te kunnen ontvangen
-app.use(express.json());
-
-// Server statische bestanden (zoals HTML, CSS en client JS) vanuit de hoofdmap
-app.use(express.static(__dirname));
-
-// Stuur kas.html mee als iemand de hoofd-URL bezoekt
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'kas.html'));
-});
-
-// Verbind met SQLite database
-const db = new sqlite3.Database('./kasboek.db', (err) => {
-    if (err) {
-        console.error('Fout bij open database:', err.message);
-    } else {
-        console.log('Verbonden met de SQLite-database.');
-    }
-});
-
-// Middleware om JSON-data te kunnen ontvangen
-app.use(express.json());
-
-// Server statische bestanden (zoals HTML, CSS en client JS) vanuit de hoofdmap
-app.use(express.static(__dirname));
-
-// Stuur kas.html mee als iemand de hoofd-URL bezoekt
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'kas.html'));
-});
-
-// Verbind met SQLite database
-const db = new sqlite3.Database('./kasboek.db', (err) => {
-    if (err) {
-        console.error('Fout bij open database:', err.message);
-    } else {
-        console.log('Verbonden met de SQLite-database.');
-    }
-});
-// Middleware om JSON-data te kunnen ontvangen
-app.use(express.json());
-
-// Server statische bestanden (zoals HTML, CSS en client JS) vanuit de hoofdmap
-app.use(express.static(__dirname));
-
-// Stuur kas.html mee als iemand de hoofd-URL bezoekt
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'kas.html'));
-});
-
-// Verbind met SQLite database
-const db = new sqlite3.Database('./kasboek.db', (err) => {
-    if (err) {
-        console.error('Fout bij open database:', err.message);
-    } else {
-        console.log('Verbonden met de SQLite-database.');
-    }
-});// Middleware om JSON data te kunnen ontvangen
-app.use(express.json());
-
-// Serveer statische bestanden (zoals je HTML, CSS en client JS) vanuit dezelfde map
-app.use(express.static(path.join(__dirname)));
-
-// Verbinden met SQLite database (wordt automatisch aangemaakt als bestand)
-const db = new sqlite3.Database('./kasboek.db', (err) => {
-    if (err) {
-        console.error('Fout bij openen database:', err.message);
-    } else {
-        console.log('Verbonden met de SQLite database.');
-    }
-});
-
-// Maak een tabel aan voor centrale opslag (sleutel-waarde of per module)
-db.run(`CREATE TABLE IF NOT EXISTS app_data (
-    key TEXT PRIMARY KEY,
-    value TEXT
-)`);
 
 // API Endpoint om data op te halen
 app.get('/api/data/:key', (req, res) => {
@@ -149,13 +66,6 @@ app.post('/api/data', (req, res) => {
     );
 });
 
-
-
-
-// Start de server
-app.listen(PORT, () => {
-    console.log(`Server draait op http://localhost:${PORT}`);
-});
 // Zorg voor standaard startdata als de database nog leeg is
 db.serialize(() => {
     db.get("SELECT value FROM app_data WHERE key = 'gebruikers'", (err, row) => {
@@ -170,4 +80,9 @@ db.serialize(() => {
             });
         }
     });
+});
+
+// Start de server
+app.listen(PORT, () => {
+    console.log(`Server draait op poort ${PORT}`);
 });
