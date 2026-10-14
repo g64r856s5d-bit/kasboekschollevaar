@@ -1361,13 +1361,7 @@ if (confirm('Verwijder deze wallet mutatie?')) {
         console.log('Kon cloud data niet ophalen:', e);
     }
 
-    // 2. Toevoegen of bewerken in de verse lijst
-    if (editIndex !== "") {
-        users[editIndex] = userData;
-    } else {
-        users.push(userData);
-    }
-
+    
 // 1. Verzamel de gegevens uit het formulier in userData
     const userData = {
         naam: document.getElementById('gebruikerNaam').value.trim(),
