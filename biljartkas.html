@@ -1058,18 +1058,6 @@ function deleteKeuken(index) {
         renderReports();
     }
 }
-    // 2. Jouw bestaande logica
-    if (!checkEnToestemming()) return;
-
-    if (confirm('Verwijder dit keukenproduct?')) {
-        keukenList.splice(index, 1);
-        slaDataOp('schollevaar_keuken', keukenList);
-        renderKeuken();
-        updateKassaSaldo();
-        renderReports();
-    }
-}
-
 
 
 
