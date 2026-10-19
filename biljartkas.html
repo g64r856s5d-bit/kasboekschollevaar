@@ -1051,14 +1051,13 @@ function deleteKeuken(index) {
     if (!checkEnToestemming()) return;
 
     if (confirm('Verwijder dit keukenproduct?')) {
-        keukenList.splice(index, 1);
-        slaDataOp('schollevaar_keuken', keukenList);
+        keuken.splice(index, 1); // <--- Aangepast naar de juiste lijstnaam
+        slaDataOp('schollevaar_keuken', keuken);
         renderKeuken();
         updateKassaSaldo();
         renderReports();
     }
 }
-
 
 
     // --- STORTING & ONKOSTEN ---
