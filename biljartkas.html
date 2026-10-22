@@ -1225,19 +1225,18 @@ slaDataOp('schollevaar_opname', opnameList);
         });
     }
 
- 
 function deleteOpname(index) {
     if (!checkEnToestemming()) return;
 
     if (confirm('Verwijder deze opname?')) {
         opnameList.splice(index, 1);
         localStorage.setItem('schollevaar_opname', JSON.stringify(opnameList));
+        slaDataOp('schollevaar_opname', opnameList); // <-- Deze regel hier ook toevoegen!
         renderOpnames();
         updateKassaSaldo();
         renderReports();
     }
-}
-
+} 
 
     function updateKassaSaldo() {
         let totaalStortingen = stortingList.reduce((acc, item) => acc + item.totaalStorting, 0);
