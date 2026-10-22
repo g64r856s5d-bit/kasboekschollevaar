@@ -1168,7 +1168,11 @@ function deleteStorting(index) {
 
     if (confirm('Verwijder deze storting?')) {
         stortingList.splice(index, 1);
+        
+        // Sla de gewijzigde lijst lokaal op én stuur het naar de database/server
         localStorage.setItem('schollevaar_storting', JSON.stringify(stortingList));
+        slaDataOp('schollevaar_storting', stortingList); // <-- Deze regel zorgt dat de database ook wordt bijgewerkt!
+
         renderStortingen();
         updateKassaSaldo();
         renderReports();
