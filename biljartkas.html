@@ -1310,7 +1310,7 @@ if (confirm('Verwijder deze wallet mutatie?')) {
             walletList.splice(index, 1);
            
 
-
+slaDataOp('schollevaar_wallet', walletList);
  localStorage.setItem('schollevaar_wallet', JSON.stringify(walletList));
             renderWallet();
             updateWalletSaldo();
