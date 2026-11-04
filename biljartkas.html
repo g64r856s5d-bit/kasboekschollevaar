@@ -1095,7 +1095,7 @@ function calcStortingTotaal() {
             barvergoeding: parseFloat(document.getElementById('kostenBarvergoeding').value) || 0
         };
 
-        item.totaalKosten = item.drank + item.keuken + item.schoonmaak + item.bon + item.representatie + item.kasverschil + item.barvergoeding;
+        item.totaalKosten = item.drank + item.keuken + item.schoonmaak + item.kasverschil + item.barvergoeding;
         item.totaalStorting = item.omzet - item.totaalKosten;
 
 stortingList.push(item);
