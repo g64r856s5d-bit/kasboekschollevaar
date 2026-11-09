@@ -1113,7 +1113,15 @@ document.getElementById('stortingForm').reset();
         updateKassaSaldo();
         renderReports();
     }
-
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return dateString;
+}
+    
     function renderStortingen() {
         const tbody = document.getElementById('stortingTableBody');
         const tfoot = document.getElementById('stortingTableFoot');
@@ -1129,7 +1137,7 @@ document.getElementById('stortingForm').reset();
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${item.datum}</td>
+                <td>${formatDate(item.datum)}</td>
                 <td>${item.gebruiker}</td>
                 <td>€ ${item.omzet.toFixed(2).replace('.', ',')}</td>
                 <td>€ ${item.drank.toFixed(2).replace('.', ',')}</td>
