@@ -1220,7 +1220,7 @@ slaDataOp('schollevaar_opname', opnameList);
         opnameList.forEach((item, index) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${item.datum}</td>
+                <td>${formatDate(item.datum)}</td>
                 <td>${item.gebruiker}</td>
                 <td>${item.reden}</td>
                 <td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td>
@@ -1571,7 +1571,7 @@ function populateUserSelects() {
             rDrankWaarde += waarde;
 
             repDrankBody.innerHTML += `<tr>
-                <td>${item.datum}</td><td>${item.naam}</td><td>${item.begin}</td><td>${item.inkoop}</td><td>${item.verkocht}</td>
+                <td><td>${formatDate(item.datum)}</td></td><td>${item.naam}</td><td>${item.begin}</td><td>${item.inkoop}</td><td>${item.verkocht}</td>
                 <td>€ ${(item.verkoopprijs || 0).toFixed(2).replace('.', ',')}</td><td>€ ${omzet.toFixed(2).replace('.', ',')}</td>
                 <td>${rest}</td><td>€ ${waarde.toFixed(2).replace('.', ',')}</td>
             </tr>`;
@@ -1598,7 +1598,7 @@ function populateUserSelects() {
             rKeukenWaarde += waarde;
 
             repKeukenBody.innerHTML += `<tr>
-                <td>${item.datum}</td><td>${item.naam}</td><td>${item.begin}</td><td>${item.inkoop}</td><td>${item.verkocht}</td>
+                <td><td>${formatDate(item.datum)}</td></td><td>${item.naam}</td><td>${item.begin}</td><td>${item.inkoop}</td><td>${item.verkocht}</td>
                 <td>€ ${(item.verkoopprijs || 0).toFixed(2).replace('.', ',')}</td><td>€ ${omzet.toFixed(2).replace('.', ',')}</td>
                 <td>${rest}</td><td>€ ${waarde.toFixed(2).replace('.', ',')}</td>
             </tr>`;
@@ -1622,7 +1622,7 @@ function populateUserSelects() {
             rStortKosten += item.totaalKosten;
             rStortBedrag += item.totaalStorting;
             repStortingBody.innerHTML += `<tr>
-                <td>${item.datum}</td><td>${item.gebruiker}</td><td>€ ${item.omzet.toFixed(2).replace('.', ',')}</td>
+                <td><td>${formatDate(item.datum)}</td></td><td>${item.gebruiker}</td><td>€ ${item.omzet.toFixed(2).replace('.', ',')}</td>
                 <td>€ ${item.totaalKosten.toFixed(2).replace('.', ',')}</td><td>€ ${item.totaalStorting.toFixed(2).replace('.', ',')}</td>
             </tr>`;
         });
@@ -1645,7 +1645,7 @@ function populateUserSelects() {
             rRepK += item.representatie; rKasK += item.kasverschil; rBarK += item.barvergoeding; rTotK += item.totaalKosten;
 
             repOnkostenBody.innerHTML += `<tr>
-                <td>${item.datum}</td><td>${item.gebruiker}</td>
+                <td><td>${formatDate(item.datum)}</td></td><td>${item.gebruiker}</td>
                 <td>€ ${item.drank.toFixed(2).replace('.', ',')}</td><td>€ ${item.keuken.toFixed(2).replace('.', ',')}</td>
                 <td>€ ${item.schoonmaak.toFixed(2).replace('.', ',')}</td><td>€ ${item.bon.toFixed(2).replace('.', ',')}</td>
                 <td>€ ${item.representatie.toFixed(2).replace('.', ',')}</td><td>€ ${item.kasverschil.toFixed(2).replace('.', ',')}</td>
@@ -1669,7 +1669,7 @@ function populateUserSelects() {
 
         walletList.filter(i => filterDate(i.datum)).forEach(item => {
             rWalletBedrag += item.bedrag;
-            repWalletBody.innerHTML += `<tr><td>${item.datum}</td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
+            repWalletBody.innerHTML += `<tr><td><td>${formatDate(item.datum)}</td></td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
         });
         repWalletFoot.innerHTML = `<tr>
             <td></td><td></td>
@@ -1685,7 +1685,7 @@ function populateUserSelects() {
 
         opnameList.filter(i => filterDate(i.datum)).forEach(item => {
             rOpnameBedrag += item.bedrag;
-            repOpnameBody.innerHTML += `<tr><td>${item.datum}</td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
+            repOpnameBody.innerHTML += `<tr><td><td>${formatDate(item.datum)}</td></td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
         });
         repOpnameFoot.innerHTML = `<tr>
             <td></td><td></td>
