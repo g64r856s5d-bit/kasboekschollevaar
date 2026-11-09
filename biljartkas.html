@@ -988,7 +988,7 @@ document.getElementById('drankForm').reset();
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${item.datum || ''}</td>
+                <td>${formatDate(item.datum || '')}</td>
                 <td>${item.naam || ''}</td>
                 <td>${item.begin || 0}</td>
                 <td>${item.inkoop || 0}</td>
@@ -1289,7 +1289,7 @@ document.getElementById('walletForm').reset();
             totaalBedrag += item.bedrag;
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${item.datum}</td>
+                <td>${formatDate(item.datum)}</td>
                 <td>${item.gebruiker}</td>
                 <td>${item.reden}</td>
                 <td class="${item.bedrag < 0 ? 'text-danger' : ''}">€ ${item.bedrag.toFixed(2).replace('.', ',')}</td>
