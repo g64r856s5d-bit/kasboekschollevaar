@@ -1577,7 +1577,8 @@ function populateUserSelects() {
             </tr>`;
         });
         repDrankFoot.innerHTML = `<tr>
-            <td colspan="6" style="text-align:right;">Totaal:</td>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
             <td>€ ${rDrankOmzet.toFixed(2).replace('.', ',')}</td>
             <td></td>
             <td>€ ${rDrankWaarde.toFixed(2).replace('.', ',')}</td>
@@ -1603,7 +1604,8 @@ function populateUserSelects() {
             </tr>`;
         });
         repKeukenFoot.innerHTML = `<tr>
-            <td colspan="6" style="text-align:right;">Totaal:</td>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
             <td>€ ${rKeukenOmzet.toFixed(2).replace('.', ',')}</td>
             <td></td>
             <td>€ ${rKeukenWaarde.toFixed(2).replace('.', ',')}</td>
@@ -1625,7 +1627,8 @@ function populateUserSelects() {
             </tr>`;
         });
         repStortingFoot.innerHTML = `<tr>
-            <td colspan="2" style="text-align:right;">Totaal:</td>
+            <td></td>
+            <td style="text-align:right;">Totaal:</td>
             <td>€ ${rStortOmzet.toFixed(2).replace('.', ',')}</td>
             <td>€ ${rStortKosten.toFixed(2).replace('.', ',')}</td>
             <td>€ ${rStortBedrag.toFixed(2).replace('.', ',')}</td>
@@ -1650,7 +1653,8 @@ function populateUserSelects() {
             </tr>`;
         });
         repOnkostenFoot.innerHTML = `<tr>
-            <td colspan="2" style="text-align:right;">Totaal:</td>
+            <td></td>
+            <td style="text-align:right;">Totaal:</td>
             <td>€ ${rDrankK.toFixed(2).replace('.', ',')}</td><td>€ ${rKeukK.toFixed(2).replace('.', ',')}</td>
             <td>€ ${rSchoonK.toFixed(2).replace('.', ',')}</td><td>€ ${rBonK.toFixed(2).replace('.', ',')}</td>
             <td>€ ${rRepK.toFixed(2).replace('.', ',')}</td><td>€ ${rKasK.toFixed(2).replace('.', ',')}</td>
@@ -1668,7 +1672,8 @@ function populateUserSelects() {
             repWalletBody.innerHTML += `<tr><td>${formatDate(item.datum)}</td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
         });
         repWalletFoot.innerHTML = `<tr>
-            <td colspan="3" style="text-align:right;">Totaal:</td>
+            <td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
             <td>€ ${rWalletBedrag.toFixed(2).replace('.', ',')}</td>
         </tr>`;
 
@@ -1683,7 +1688,8 @@ function populateUserSelects() {
             repOpnameBody.innerHTML += `<tr><td>${formatDate(item.datum)}</td><td>${item.gebruiker}</td><td>${item.reden}</td><td>€ ${item.bedrag.toFixed(2).replace('.', ',')}</td></tr>`;
         });
         repOpnameFoot.innerHTML = `<tr>
-            <td colspan="3" style="text-align:right;">Totaal:</td>
+            <td></td><td></td>
+            <td style="text-align:right;">Totaal:</td>
             <td>€ ${rOpnameBedrag.toFixed(2).replace('.', ',')}</td>
         </tr>`;
     }
